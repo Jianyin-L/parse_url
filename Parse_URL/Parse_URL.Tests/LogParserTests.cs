@@ -77,7 +77,7 @@ public class LogParserTests
             "168.41.191.40 - - [10/Jul/2018:22:21:29 +0200] \"POST /api/data HTTP/1.1\" 201 512 \"-\" \"curl/7.64.1\""
         });
 
-        List<LogEntry> result = parser.ParseLogFile(logFilePath);
+        List<LogEntry> result = LogParser.ParseLogFile(logFilePath);
 
         Assert.Equal(2, result.Count);
         Assert.Equal("177.71.128.21", result[0].IPAddress);
@@ -88,5 +88,37 @@ public class LogParserTests
         Assert.Equal("/api/data", result[1].Url);
         Assert.Equal(201, result[1].StatusCode);
         Assert.Equal("curl/7.64.1", result[1].UserAgent);
+    }
+
+    [Fact]
+    public void CountUniqueItems_ShouldReturnUniqueIPs()
+    {
+        var logEntries = new List<LogEntry>
+        {
+            new() { IPAddress = "123.12.123.12"},
+            new() { IPAddress = "123.12.123.12"},
+            new() { IPAddress = "333.12.123.12"}
+        };
+
+        int result = LogParser.CountUniqueItems(logEntries, log => log.IPAddress);
+        Assert.Equal(2, result);
+    }
+
+    [Fact]
+    public void GetTopItems_ShouldReturnTopItems()
+    {
+        var logEntries = new List<LogEntry>
+        {
+            new() { Url = "/home"},
+            new() { Url = "/home"},
+            new() { Url = "/about"},
+            new() { Url = "/about"},
+            new() { Url = "/contact"}
+        };
+
+        var result = LogParser.GetTopItems(logEntries, log => log.Url, 2);
+        Assert.Equal(2, result.Count);
+        Assert.Equal(2, result["/home"]);
+        Assert.Equal(2, result["/about"]);
     }
 }

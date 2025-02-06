@@ -9,7 +9,7 @@ public class LogParser
         @"(?<ip>\d+\.\d+\.\d+\.\d+) - - \[(?<timestamp>[^\]]+)] ""(?<method>GET|POST|PUT|DELETE) (?<url>[^\s]+) .*"" (?<status>\d+) (?<size>\d+|-) "".*"" ""(?<useragent>.*)""",
         RegexOptions.Compiled);
 
-    public List<LogEntry> ParseLogFile(string filePath)
+    public static List<LogEntry> ParseLogFile(string filePath)
     {
         var logEntries = new List<LogEntry>();
 
@@ -31,5 +31,20 @@ public class LogParser
         }
 
         return logEntries;
+    }
+
+    public static int CountUniqueItems<T>(List<LogEntry> logEntries, Func<LogEntry, T> selector)
+    {
+        return logEntries.Select(selector).Distinct().Count();
+    }
+
+    // What happen if the number of top items is greater than n?
+    public static Dictionary<string, int> GetTopItems<T>(List<LogEntry> logEntries, Func<LogEntry, T> selector, int n)
+    {
+        return logEntries
+            .GroupBy(selector)
+            .OrderByDescending(g => g.Count())
+            .Take(n)
+            .ToDictionary(g => g.Key?.ToString() ?? "Unknown", g => g.Count());
     }
 }
