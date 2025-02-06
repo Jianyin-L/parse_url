@@ -121,4 +121,22 @@ public class LogParserTests
         Assert.Equal(2, result["/home"]);
         Assert.Equal(2, result["/about"]);
     }
+
+    [Fact]
+    public void GetTopItems_ShouldReturnTopItemsIncludingTies()
+    {
+        var logEntries = new List<LogEntry>
+        {
+            new() { Url = "/home"},
+            new() { Url = "/home"},
+            new() { Url = "/about"},
+            new() { Url = "/about"},
+            new() { Url = "/contact"}
+        };
+
+        var result = LogParser.GetTopItemsIncludingTies(logEntries, log => log.Url, 1);
+        Assert.Equal(2, result.Count);
+        Assert.Equal(2, result["/home"]);
+        Assert.Equal(2, result["/about"]);
+    }
 }
