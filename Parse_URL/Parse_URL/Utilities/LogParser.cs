@@ -1,4 +1,5 @@
 ﻿using Parse_URL.Model;
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace Parse_URL.Utilities;
@@ -6,7 +7,7 @@ namespace Parse_URL.Utilities;
 public class LogParser
 {
     private static readonly Regex LogPattern = new Regex(
-        @"(?<ip>\d+\.\d+\.\d+\.\d+) - - \[(?<timestamp>[^\]]+)] ""(?<method>GET|POST|PUT|DELETE) (?<url>[^\s]+) .*"" (?<status>\d+) (?<size>\d+|-) "".*"" ""(?<useragent>.*)""",
+        @"(?<ip>\d+\.\d+\.\d+\.\d+) - (?<user>.+) \[(?<timestamp>[^\]]+)] ""(?<method>[^\s]+) (?<url>[^\s]+) .*"" (?<status>\d+) (?<size>\d+|-) "".*"" ""(?<useragent>.*)""",
         RegexOptions.Compiled);
 
     public static List<LogEntry> ParseLogFile(string filePath)
@@ -21,7 +22,8 @@ public class LogParser
             logEntries.Add(new LogEntry
             {
                 IPAddress = match.Groups["ip"].Value,
-                Timestamp = DateTime.TryParse(match.Groups["timestamp"].Value, out var dt) ? dt : DateTime.MinValue,
+                User = match.Groups["user"].Value,
+                Timestamp = DateTimeOffset.TryParseExact(match.Groups["timestamp"].Value, "dd/MMM/yyyy:HH:mm:ss zzz", CultureInfo.InvariantCulture, DateTimeStyles.None, out var dt) ? dt : DateTimeOffset.MinValue,
                 HttpMethod = match.Groups["method"].Value,
                 Url = match.Groups["url"].Value,
                 StatusCode = int.TryParse(match.Groups["status"].Value, out var status) ? status : 0,
