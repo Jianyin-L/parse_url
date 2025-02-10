@@ -7,10 +7,10 @@ namespace Parse_URL.Utilities;
 public class LogParser
 {
     private static readonly Regex LogPattern = new Regex(
-        @"(?<ip>\d+\.\d+\.\d+\.\d+|-) - (?<user>.+) \[(?<timestamp>[^\]]+)] ""(?<method>[^\s]+) (?<url>[^\s]+) .*"" (?<status>\d+) (?<size>\d+|-) "".*"" ""(?<useragent>.*)""",
+        @"(?<ip>\d+\.\d+\.\d+\.\d+|-) - (?<user>.+) \[(?<timestamp>[^\]]+)] ""(?<method>[^\s]+) (?<url>[^\s]+) .*"" (?<status>\d{3}) (?<size>\d+|-) "".*"" ""(?<useragent>.*)""",
         RegexOptions.Compiled);
 
-    private static readonly string[] HttpMethods = ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS", "TRACE", "PATCH"];  // TODO: Turn this to an enum??     // Assuming these are the only valid HTTP methods
+    private static readonly string[] HttpMethods = ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS", "TRACE"];  // TODO: Turn this to an enum??     // Assuming these are the only valid HTTP methods
 
     public static List<LogEntry> ParseLogFile(string filePath)
     {

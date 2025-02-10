@@ -143,6 +143,7 @@ public class LogParserTests
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua", // Invalid log entry
             "XYZ.XY.XYZ.XY - - [10/Jul/2018:22:21:28 +0200] \"GET /home HTTP/1.1\" 200 3574 \"-\" \"Mozilla/5.0\"", // Invalid IP Address
             "177.71.128.21 - - [10/Jul/2018:22:21:28 +0200] \"XYZ /home HTTP/1.1\" 200 3574 \"-\" \"Mozilla/5.0\"", // Invalid HTTP method
+            "177.71.128.21 - - [10/Jul/2018:22:21:28 +0200] \"GET /home HTTP/1.1\" 9999 3574 \"-\" \"Mozilla/5.0\"", // Invalid status code
             "177.71.128.21 - - [10/Jul/2018:22:21:28 +0200] \"GET /home HTTP/1.1\" 200 -3574 \"-\" \"Mozilla/5.0\"" // Negative response size
         );
 
