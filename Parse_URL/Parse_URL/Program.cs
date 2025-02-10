@@ -19,17 +19,22 @@
 var filePath = "./Data/example.log";
 var logEntries = LogParser.ParseLogFile(filePath);
 
-Console.WriteLine($"Total Entries: {logEntries.Count}");
-Console.WriteLine($"Unique IP Addresses: {LogParser.CountUniqueItems(logEntries, log => log.IPAddress)}");
+//foreach (var log in logEntries)
+//{
+//    Console.WriteLine($"{log.IPAddress} {log.User} {log.Timestamp} {log.HttpMethod} {log.Url} {log.StatusCode} {log.ResponseSize} {log.UserAgent}");
+//}
 
-var topUrls = LogParser.GetTopItems(logEntries, log => log.Url, 3);
+Console.WriteLine($"Total Entries: {logEntries.Count}");
+Console.WriteLine($"Unique IP Addresses: {LogStatistics.CountUniqueItems(logEntries, log => log.IPAddress)}");
+
+var topUrls = LogStatistics.GetTopItems(logEntries, log => log.Url, 3);
 Console.WriteLine("Top 3 Most Visited URLs:");
 foreach (var url in topUrls)
 {
     Console.WriteLine($"{url.Key}: {url.Value} times");
 }
 
-var topIPs = LogParser.GetTopItems(logEntries, log => log.IPAddress, 3);
+var topIPs = LogStatistics.GetTopItems(logEntries, log => log.IPAddress, 3);
 Console.WriteLine("Top 3 Most Active IPs:");
 foreach (var ip in topIPs)
 {
