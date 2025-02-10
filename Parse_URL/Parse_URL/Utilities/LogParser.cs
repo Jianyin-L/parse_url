@@ -18,13 +18,24 @@ public class LogParser
 
         foreach (var line in File.ReadLines(filePath))
         {
-            var match = LogPattern.Match(line);
+            var entry = ParseLogLine(line);
+            if (entry != null)
+            {
+                logEntries.Add(entry);
+            }
+        }
 
-            if (!match.Success
-                || !HttpMethods.Contains(match.Groups["method"].Value, StringComparer.OrdinalIgnoreCase))
-                continue;
+        return logEntries;
+    }
 
-            logEntries.Add(new LogEntry
+    private static LogEntry? ParseLogLine(string entry)
+    {
+        var match = LogPattern.Match(entry);
+
+        return !match.Success
+            || !HttpMethods.Contains(match.Groups["method"].Value, StringComparer.OrdinalIgnoreCase)
+            ? null
+            : new LogEntry
             {
                 IPAddress = match.Groups["ip"].Value,
                 User = match.Groups["user"].Value,
@@ -34,9 +45,6 @@ public class LogParser
                 StatusCode = int.TryParse(match.Groups["status"].Value, out var status) ? status : 0,
                 ResponseSize = int.TryParse(match.Groups["size"].Value, out var size) ? size : 0,
                 UserAgent = match.Groups["useragent"].Value
-            });
-        }
-
-        return logEntries;
+            };
     }
 }
