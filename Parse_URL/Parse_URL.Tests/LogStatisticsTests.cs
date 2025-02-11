@@ -20,6 +20,23 @@ public class LogStatisticsTests
     }
 
     [Fact]
+    public void CountUniqueItems_ShouldReturnNumberOfUniqueUsers()
+    {
+        var logEntries = new List<LogEntry>
+        {
+            new() { User = "ABC123"},
+            new() { User = "ABC123"},
+            new() { User = "User999"},
+            new() { User = "User999"},
+            new() { User = "Test"},
+            new() { User = ""}
+        };
+
+        var result = LogStatistics.CountUniqueItems(logEntries, log => log.User);
+        Assert.Equal(4, result);
+    }
+
+    [Fact]
     public void GetTopItems_ShouldReturnTopURLs()
     {
         var logEntries = new List<LogEntry>
@@ -59,77 +76,76 @@ public class LogStatisticsTests
     }
 
     [Fact]
-    public void CountUniqueItems_ShouldReturnNumberOfUniqueItems()
+    public void GetTopItems_ShouldReturnTopNActiveUsers()
     {
         var logEntries = new List<LogEntry>
         {
-            new() { Url = "/home"},
-            new() { Url = "/home"},
-            new() { Url = "/about"},
-            new() { Url = "/about"},
-            new() { Url = "/contact"}
+            new() { User = "ABC123"},
+            new() { User = "ABC123"},
+            new() { User = "User999"},
+            new() { User = "User999"},
+            new() { User = "Test"}
         };
 
-        var result = LogStatistics.CountUniqueItems(logEntries, log => log.Url);
-        Assert.Equal(3, result);
-    }
-
-    [Fact]
-    public void GetTopItems_ShouldReturnTopNItems()
-    {
-        var logEntries = new List<LogEntry>
-        {
-            new() { Url = "/home"},
-            new() { Url = "/home"},
-            new() { Url = "/about"},
-            new() { Url = "/about"},
-            new() { Url = "/contact"}
-        };
-
-        var result = LogStatistics.GetTopItems(logEntries, log => log.Url, 2);
+        var result = LogStatistics.GetTopItems(logEntries, log => log.User, 2);
 
         Assert.Equal(2, result.Count);
-        Assert.Equal(2, result["/home"]);
-        Assert.Equal(2, result["/about"]);
+        Assert.Equal(2, result["ABC123"]);
+        Assert.Equal(2, result["User999"]);
     }
 
     [Fact]
-    public void GetTopItems_ShouldReturnTopItemsWhereNHigherThanNoOfEntries()
+    public void GetTopItems_ShouldReturnAllUsersWhereNHigherThanNoOfUniqueUsers()
     {
         var logEntries = new List<LogEntry>
         {
-            new() { Url = "/home"},
-            new() { Url = "/home"},
-            new() { Url = "/about"},
-            new() { Url = "/about"},
-            new() { Url = "/contact"}
+            new() { User = "ABC123"},
+            new() { User = "ABC123"},
+            new() { User = "User999"},
+            new() { User = "User999"},
+            new() { User = "Test"}
         };
 
-        var result = LogStatistics.GetTopItems(logEntries, log => log.Url, 4);
+        var result = LogStatistics.GetTopItems(logEntries, log => log.User, 4);
 
         Assert.Equal(3, result.Count);
-        Assert.Equal(2, result["/home"]);
-        Assert.Equal(2, result["/about"]);
-        Assert.Equal(1, result["/contact"]);
+        Assert.Equal(2, result["ABC123"]);
+        Assert.Equal(2, result["User999"]);
+        Assert.Equal(1, result["Test"]);
     }
 
     [Fact]
-    public void GetTopItems_ShouldReturnTopNItemsIncludingTies()
+    public void GetTopItems_ShouldReturnTopActiveUsersIncludingTies()
     {
         var logEntries = new List<LogEntry>
         {
-            new() { Url = "/home"},
-            new() { Url = "/home"},
-            new() { Url = "/about"},
-            new() { Url = "/about"},
-            new() { Url = "/contact"}
+            new() { User = "ABC123"},
+            new() { User = "ABC123"},
+            new() { User = "User999"},
+            new() { User = "User999"},
+            new() { User = "Test"}
         };
 
-        var result = LogStatistics.GetTopItemsIncludingTies(logEntries, log => log.Url, 1);
+        var result = LogStatistics.GetTopItemsIncludingTies(logEntries, log => log.User, 1);
+
         Assert.Equal(2, result.Count);
-        Assert.Equal(2, result["/home"]);
-        Assert.Equal(2, result["/about"]);
+        Assert.Equal(2, result["ABC123"]);
+        Assert.Equal(2, result["User999"]);
     }
 
-    //TODO: handle empty fields
+    [Fact]
+    public void GetTopItems_ShouldReturnEmptyResultIfRequiredFieldMissing()
+    {
+        var logEntries = new List<LogEntry>{
+            new() { User = "ABC123"},
+            new() { User = "ABC123"},
+            new() { User = "User999"},
+            new() { User = "User999"},
+            new() { User = "Test"}
+        };
+
+        var result = LogStatistics.GetTopItemsFilteringMissing(logEntries, log => log.Url, 4);
+
+        Assert.Empty(result);
+    }
 }

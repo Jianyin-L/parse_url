@@ -18,6 +18,26 @@ public class LogStatistics
             .ToDictionary(g => g.Key?.ToString() ?? "Unknown", g => g.Count());
     }
 
+    public static Dictionary<string, int> GetTopItemsFilteringMissing<T>(List<LogEntry> logEntries, Func<LogEntry, T> selector, int n)
+    {
+        return logEntries
+            .GroupBy(entry =>
+                {
+                    var key = selector(entry);
+                    return key switch
+                    { 
+                        null => "", // Handle null values
+                        string str when string.IsNullOrWhiteSpace(str) => "", // Handle empty strings
+                        DateTimeOffset dto => dto.ToString("yyyy-MM-dd"), // Normalise dates for readability
+                        _ => key.ToString() ?? "" // Convert other types safely
+                    };
+                })
+            .Where(g => g.Key != "")
+            .OrderByDescending(g => g.Count())
+            .Take(n)
+            .ToDictionary(g => g.Key, g => g.Count());
+    }
+
     public static Dictionary<string, int> GetTopItemsIncludingTies<T>(List<LogEntry> logEntries, Func<LogEntry, T> selector, int n)
     {
         var grouped = logEntries
