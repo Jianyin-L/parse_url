@@ -19,28 +19,26 @@ public class LogStatistics
             .Select(entry => selector(entry))
             .Where(value => !filterMissing || !IsMissing(value))
             .GroupBy(value => value)
-            .Select(g => new { Key = g.Key?.ToString() ?? "Unknown", Count = g.Count() })
-            .OrderByDescending(g => g.Count)
-            .ToList();
+            .OrderByDescending(g => g.Count());
+
+        IEnumerable<IGrouping<T, T>>? result;
 
         if (!includeTies)
         {
-            return grouped
-                .Take(n)
-                .ToDictionary(g => g.Key, g => g.Count);
+            result = grouped.Take(n);
         }
         else
         {
-            var minCountToInclude = grouped.Select(g => g.Count)
+            var minCountToInclude = grouped.Select(g => g.Count())
                 .Distinct()
                 .Take(n)
                 .LastOrDefault();
 
-            return grouped
-                .Where(g => g.Count >= minCountToInclude)
-                .ToDictionary(g => g.Key!, g => g.Count);
+            result = grouped
+                .Where(g => g.Count() >= minCountToInclude);
         }
 
+        return result.ToDictionary(g => g.Key?.ToString() ?? "Unknown", g => g.Count() );
     }
 
     private static bool IsMissing<T>(T value)
