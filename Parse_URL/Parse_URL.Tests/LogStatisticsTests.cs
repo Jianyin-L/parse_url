@@ -21,21 +21,6 @@ public class LogStatisticsTests
     }
 
     [Fact]
-    public void CountUniqueItems_ShouldExcludeMissingIPsAndReturnUniqueIPCount()
-    {
-        var logEntries = new List<LogEntry>
-        {
-            new() { IPAddress = "111.11.111.11"},
-            new() { IPAddress = "111.11.111.11"},
-            new() { IPAddress = "222.22.222.22"},
-            new() { IPAddress = ""}
-        };
-
-        var result = LogStatistics.CountUniqueItems(logEntries, log => log.IPAddress, filterMissing: true);
-        Assert.Equal(2, result);
-    }
-
-    [Fact]
     public void CountUniqueItems_ShouldReturnNumberOfUniqueUsers()
     {
         var logEntries = new List<LogEntry>
@@ -53,7 +38,22 @@ public class LogStatisticsTests
     }
 
     [Fact]
-    public void GetTopItems_ShouldReturnTopURLs()
+    public void CountUniqueItems_ShouldExcludeMissingIPsAndReturnUniqueIPCount()
+    {
+        var logEntries = new List<LogEntry>
+        {
+            new() { IPAddress = "111.11.111.11"},
+            new() { IPAddress = "111.11.111.11"},
+            new() { IPAddress = "222.22.222.22"},
+            new() { IPAddress = ""}
+        };
+
+        var result = LogStatistics.CountUniqueItems(logEntries, log => log.IPAddress, filterMissing: true);
+        Assert.Equal(2, result);
+    }
+
+    [Fact]
+    public void GetTopItems_ShouldReturnTopNURLs()
     {
         var logEntries = new List<LogEntry>
         {
@@ -72,7 +72,7 @@ public class LogStatisticsTests
     }
 
     [Fact]
-    public void GetTopItems_ShouldReturnTopIPs()
+    public void GetTopItems_ShouldReturnTopNIPs()
     {
         var logEntries = new List<LogEntry>
         {
