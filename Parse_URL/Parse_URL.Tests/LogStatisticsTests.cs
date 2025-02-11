@@ -6,16 +6,32 @@ namespace Parse_URL.Tests;
 public class LogStatisticsTests
 {
     [Fact]
-    public void CountUniqueItems_ShouldReturnNumberOfUniqueIPs()
+    public void CountUniqueItems_ShouldReturnUniqueIPCount()
     {
         var logEntries = new List<LogEntry>
         {
             new() { IPAddress = "111.11.111.11"},
             new() { IPAddress = "111.11.111.11"},
-            new() { IPAddress = "222.22.222.22"}
+            new() { IPAddress = "222.22.222.22"},
+            new() { IPAddress = ""}
         };
 
         var result = LogStatistics.CountUniqueItems(logEntries, log => log.IPAddress);
+        Assert.Equal(3, result);
+    }
+
+    [Fact]
+    public void CountUniqueItems_ShouldExcludeMissingIPsAndReturnUniqueIPCount()
+    {
+        var logEntries = new List<LogEntry>
+        {
+            new() { IPAddress = "111.11.111.11"},
+            new() { IPAddress = "111.11.111.11"},
+            new() { IPAddress = "222.22.222.22"},
+            new() { IPAddress = ""}
+        };
+
+        var result = LogStatistics.CountUniqueItems(logEntries, log => log.IPAddress, true);
         Assert.Equal(2, result);
     }
 
@@ -144,7 +160,7 @@ public class LogStatisticsTests
             new() { User = "Test"}
         };
 
-        var result = LogStatistics.GetTopItemsFilteringMissing(logEntries, log => log.Url, 4);
+        var result = LogStatistics.GetTopItems(logEntries, log => log.Url, 4, true);
 
         Assert.Empty(result);
     }

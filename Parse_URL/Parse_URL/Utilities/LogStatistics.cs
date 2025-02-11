@@ -4,38 +4,24 @@ namespace Parse_URL.Utilities;
 
 public class LogStatistics
 {
-    public static int CountUniqueItems<T>(List<LogEntry> logEntries, Func<LogEntry, T> selector)
-    {
-        return logEntries.Select(selector).Distinct().Count();
-    }
-
-    public static Dictionary<string, int> GetTopItems<T>(List<LogEntry> logEntries, Func<LogEntry, T> selector, int n)
+    public static int CountUniqueItems<T>(List<LogEntry> logEntries, Func<LogEntry, T> selector, bool filterMissing = false)
     {
         return logEntries
-            .GroupBy(selector)
+            .Select(selector)
+            .Where(value => !filterMissing || !IsMissing(value))
+            .Distinct()
+            .Count();
+    }
+
+    public static Dictionary<string, int> GetTopItems<T>(List<LogEntry> logEntries, Func<LogEntry, T> selector, int n, bool filterMissing = false)
+    {
+        return logEntries
+            .Select(entry => selector(entry))
+            .Where(value => !filterMissing || !IsMissing(value))
+            .GroupBy(value => value)
             .OrderByDescending(g => g.Count())
             .Take(n)
             .ToDictionary(g => g.Key?.ToString() ?? "Unknown", g => g.Count());
-    }
-
-    public static Dictionary<string, int> GetTopItemsFilteringMissing<T>(List<LogEntry> logEntries, Func<LogEntry, T> selector, int n)
-    {
-        return logEntries
-            .GroupBy(entry =>
-                {
-                    var key = selector(entry);
-                    return key switch
-                    { 
-                        null => "", // Handle null values
-                        string str when string.IsNullOrWhiteSpace(str) => "", // Handle empty strings
-                        DateTimeOffset dto => dto.ToString("yyyy-MM-dd"), // Normalise dates for readability
-                        _ => key.ToString() ?? "" // Convert other types safely
-                    };
-                })
-            .Where(g => g.Key != "")
-            .OrderByDescending(g => g.Count())
-            .Take(n)
-            .ToDictionary(g => g.Key, g => g.Count());
     }
 
     public static Dictionary<string, int> GetTopItemsIncludingTies<T>(List<LogEntry> logEntries, Func<LogEntry, T> selector, int n)
@@ -54,5 +40,17 @@ public class LogStatistics
         return grouped
             .Where(g => g.Count >= minCountToInclude)
             .ToDictionary(g => g.Key!, g => g.Count);
+    }
+
+    private static bool IsMissing<T>(T value)
+    {
+        return value switch
+        {
+            null => true, // Null values are missing
+            string str => string.IsNullOrWhiteSpace(str), // Empty or whitespace-only strings are missing
+            DateTimeOffset dto => dto == DateTimeOffset.MinValue, // MinValue for timestamps
+            int num => num == 0, // Consider 0 as missing if needed
+            _ => false // Other types are assumed to be valid
+        };
     }
 }
