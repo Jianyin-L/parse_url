@@ -1,5 +1,16 @@
 ﻿# Log Analyser - C# Console App :pager:
 
+## Table of Contents
+- [Overview](#overview)
+- [Objectives](#objectives)
+- [Techstack](#techstack)
+- [Project Structure](#project-structure)
+- [Features](#features)
+- [Setup](#setup)
+- [Expected Output](#expected-output)
+- [Future Improvements](#future-improvements)
+- [Reference](#reference)
+
 ## Overview :page_with_curl:
 This is a simple console application written in C# that reads a log file and generates useful statistics based on the data. 
 
