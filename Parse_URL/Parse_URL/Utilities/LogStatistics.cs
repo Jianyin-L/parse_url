@@ -13,18 +13,7 @@ public class LogStatistics
             .Count();
     }
 
-    public static Dictionary<string, int> GetTopItems<T>(List<LogEntry> logEntries, Func<LogEntry, T> selector, int n, bool filterMissing = false)
-    {
-        return logEntries
-            .Select(entry => selector(entry))
-            .Where(value => !filterMissing || !IsMissing(value))
-            .GroupBy(value => value)
-            .OrderByDescending(g => g.Count())
-            .Take(n)
-            .ToDictionary(g => g.Key?.ToString() ?? "Unknown", g => g.Count());
-    }
-
-    public static Dictionary<string, int> GetTopItemsIncludingTies<T>(List<LogEntry> logEntries, Func<LogEntry, T> selector, int n, bool filterMissing = false)
+    public static Dictionary<string, int> GetTopItems<T>(List<LogEntry> logEntries, Func<LogEntry, T> selector, int n, bool filterMissing = false, bool includeTies = false)
     {
         var grouped = logEntries
             .Select(entry => selector(entry))
@@ -34,14 +23,24 @@ public class LogStatistics
             .OrderByDescending(g => g.Count)
             .ToList();
 
-        var minCountToInclude = grouped.Select(g => g.Count)
-            .Distinct()
-            .Take(n)
-            .LastOrDefault();
+        if (!includeTies)
+        {
+            return grouped
+                .Take(n)
+                .ToDictionary(g => g.Key, g => g.Count);
+        }
+        else
+        {
+            var minCountToInclude = grouped.Select(g => g.Count)
+                .Distinct()
+                .Take(n)
+                .LastOrDefault();
 
-        return grouped
-            .Where(g => g.Count >= minCountToInclude)
-            .ToDictionary(g => g.Key!, g => g.Count);
+            return grouped
+                .Where(g => g.Count >= minCountToInclude)
+                .ToDictionary(g => g.Key!, g => g.Count);
+        }
+
     }
 
     private static bool IsMissing<T>(T value)

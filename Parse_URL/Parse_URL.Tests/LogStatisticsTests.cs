@@ -31,7 +31,7 @@ public class LogStatisticsTests
             new() { IPAddress = ""}
         };
 
-        var result = LogStatistics.CountUniqueItems(logEntries, log => log.IPAddress, true);
+        var result = LogStatistics.CountUniqueItems(logEntries, log => log.IPAddress, filterMissing: true);
         Assert.Equal(2, result);
     }
 
@@ -141,7 +141,7 @@ public class LogStatisticsTests
             new() { User = "Test"}
         };
 
-        var result = LogStatistics.GetTopItems(logEntries, log => log.Url, 4, true);
+        var result = LogStatistics.GetTopItems(logEntries, log => log.Url, 4, filterMissing: true);
 
         Assert.Empty(result);
     }
@@ -159,7 +159,7 @@ public class LogStatisticsTests
             new() { User = ""}
         };
 
-        var result = LogStatistics.GetTopItemsIncludingTies(logEntries, log => log.User, 1);
+        var result = LogStatistics.GetTopItems(logEntries, log => log.User, 1, filterMissing: false, includeTies: true);
 
         Assert.Equal(3, result.Count);
         Assert.Equal(2, result["ABC123"]);
@@ -180,7 +180,7 @@ public class LogStatisticsTests
             new() { User = ""}
         };
 
-        var result = LogStatistics.GetTopItemsIncludingTies(logEntries, log => log.User, 1, true);
+        var result = LogStatistics.GetTopItems(logEntries, log => log.User, 1, filterMissing: true, includeTies: true);
 
         Assert.Equal(2, result.Count);
         Assert.Equal(2, result["ABC123"]);
