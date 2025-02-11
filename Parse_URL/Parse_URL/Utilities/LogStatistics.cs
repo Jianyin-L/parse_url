@@ -24,10 +24,12 @@ public class LogStatistics
             .ToDictionary(g => g.Key?.ToString() ?? "Unknown", g => g.Count());
     }
 
-    public static Dictionary<string, int> GetTopItemsIncludingTies<T>(List<LogEntry> logEntries, Func<LogEntry, T> selector, int n)
+    public static Dictionary<string, int> GetTopItemsIncludingTies<T>(List<LogEntry> logEntries, Func<LogEntry, T> selector, int n, bool filterMissing = false)
     {
         var grouped = logEntries
-            .GroupBy(selector)
+            .Select(entry => selector(entry))
+            .Where(value => !filterMissing || !IsMissing(value))
+            .GroupBy(value => value)
             .Select(g => new { Key = g.Key?.ToString() ?? "Unknown", Count = g.Count() })
             .OrderByDescending(g => g.Count)
             .ToList();
@@ -46,11 +48,11 @@ public class LogStatistics
     {
         return value switch
         {
-            null => true, // Null values are missing
-            string str => string.IsNullOrWhiteSpace(str), // Empty or whitespace-only strings are missing
-            DateTimeOffset dto => dto == DateTimeOffset.MinValue, // MinValue for timestamps
-            int num => num == 0, // Consider 0 as missing if needed
-            _ => false // Other types are assumed to be valid
+            null => true,
+            string str => string.IsNullOrWhiteSpace(str),
+            DateTimeOffset dto => dto == DateTimeOffset.MinValue,
+            int num => num == 0,
+            _ => false
         };
     }
 }

@@ -131,25 +131,6 @@ public class LogStatisticsTests
     }
 
     [Fact]
-    public void GetTopItems_ShouldReturnTopActiveUsersIncludingTies()
-    {
-        var logEntries = new List<LogEntry>
-        {
-            new() { User = "ABC123"},
-            new() { User = "ABC123"},
-            new() { User = "User999"},
-            new() { User = "User999"},
-            new() { User = "Test"}
-        };
-
-        var result = LogStatistics.GetTopItemsIncludingTies(logEntries, log => log.User, 1);
-
-        Assert.Equal(2, result.Count);
-        Assert.Equal(2, result["ABC123"]);
-        Assert.Equal(2, result["User999"]);
-    }
-
-    [Fact]
     public void GetTopItems_ShouldReturnEmptyResultIfRequiredFieldMissing()
     {
         var logEntries = new List<LogEntry>{
@@ -163,5 +144,46 @@ public class LogStatisticsTests
         var result = LogStatistics.GetTopItems(logEntries, log => log.Url, 4, true);
 
         Assert.Empty(result);
+    }
+
+    [Fact]
+    public void GetTopItems_ShouldReturnTopActiveUsersIncludingTies()
+    {
+        var logEntries = new List<LogEntry>
+        {
+            new() { User = "ABC123"},
+            new() { User = "ABC123"},
+            new() { User = "User999"},
+            new() { User = "User999"},
+            new() { User = ""},
+            new() { User = ""}
+        };
+
+        var result = LogStatistics.GetTopItemsIncludingTies(logEntries, log => log.User, 1);
+
+        Assert.Equal(3, result.Count);
+        Assert.Equal(2, result["ABC123"]);
+        Assert.Equal(2, result["User999"]);
+        Assert.Equal(2, result[""]);
+    }
+
+    [Fact]
+    public void GetTopItems_ShouldReturnTopActiveUsersIncludingTiesExcludingMissingUsers()
+    {
+        var logEntries = new List<LogEntry>
+        {
+            new() { User = "ABC123"},
+            new() { User = "ABC123"},
+            new() { User = "User999"},
+            new() { User = "User999"},
+            new() { User = ""},
+            new() { User = ""}
+        };
+
+        var result = LogStatistics.GetTopItemsIncludingTies(logEntries, log => log.User, 1, true);
+
+        Assert.Equal(2, result.Count);
+        Assert.Equal(2, result["ABC123"]);
+        Assert.Equal(2, result["User999"]);
     }
 }
