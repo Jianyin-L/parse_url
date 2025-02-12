@@ -1,5 +1,6 @@
 ﻿namespace Parse_URL.Models;
 
+// TODO: add description to all methods
 /// <summary>
 /// Assuming these are the only valid HTTP methods
 /// </summary>
