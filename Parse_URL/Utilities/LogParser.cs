@@ -7,7 +7,7 @@ namespace Parse_URL.Utilities;
 public class LogParser
 {
     private static readonly Regex LogPattern = new Regex(
-        @"(?<ip>\d+\.\d+\.\d+\.\d+|-) - (?<user>.+) \[(?<timestamp>[^\]]+)] ""(?<method>[^\s]+) (?<url>[^\s]+) .*"" (?<status>\d{3}) (?<size>\d+|-) "".*"" ""(?<useragent>.*)""",   // Spaces, multi lines
+        @"(?<ip>\d+\.\d+\.\d+\.\d+|-)\s+-\s+(?<user>\S+)\s+\[(?<timestamp>[^\]]+)]\s+""(?<method>[^\s]+)\s+(?<url>[^\s]+).*""\s+(?<status>\d{3})\s+(?<size>\d+|-)\s+"".*""\s+""(?<useragent>.*)""",   // TODO: missing value in timestamp, status code etc..
         RegexOptions.Compiled);
 
     public static List<LogEntry> ParseLogFile(string filePath)

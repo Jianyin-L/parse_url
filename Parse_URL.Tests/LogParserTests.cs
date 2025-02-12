@@ -9,13 +9,16 @@ public class LogParserTests
     public void ParseLogFile_ShouldParseValidLogEntries()
     {
         // Arrange
-        var logFilePath = CreateTestLogFile("177.71.128.21 - - [10/Jul/2018:22:21:28 +0200] \"GET /home HTTP/1.1\" 200 3574 \"-\" \"Mozilla/5.0\"");
+        var logFilePath = CreateTestLogFile(
+            "177.71.128.21 - - [10/Jul/2018:22:21:28 +0200] \"GET /home HTTP/1.1\" 200 3574 \"-\" \"Mozilla/5.0\"",
+            "177.71.128.21\t-  - [10/Jul/2018:22:21:28 +0200]            \"GET /home HTTP/1.1\"   200 3574 \"-\" \"Mozilla/5.0\""   // Additional spaces and tabs
+            );
 
         // Act
         var result = LogParser.ParseLogFile(logFilePath);
 
         // Assert
-        Assert.Single(result);
+        Assert.Equal(2, result.Count);
 
         Assert.Equal("177.71.128.21", result[0].IPAddress);
         Assert.Equal("-", result[0].User);
@@ -25,6 +28,15 @@ public class LogParserTests
         Assert.Equal(200, result[0].StatusCode);
         Assert.Equal(3574, result[0].ResponseSize);
         Assert.Equal("Mozilla/5.0", result[0].UserAgent);
+
+        Assert.Equal("177.71.128.21", result[1].IPAddress);
+        Assert.Equal("-", result[1].User);
+        Assert.Equal("10/Jul/2018:22:21:28 +02:00", result[1].Timestamp.ToString("dd/MMM/yyyy:HH:mm:ss zzz", CultureInfo.InvariantCulture));
+        Assert.Equal("GET", result[1].Method.ToString());
+        Assert.Equal("/home", result[1].Url);
+        Assert.Equal(200, result[1].StatusCode);
+        Assert.Equal(3574, result[1].ResponseSize);
+        Assert.Equal("Mozilla/5.0", result[1].UserAgent);
     }
 
     [Fact]
