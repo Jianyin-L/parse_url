@@ -1,5 +1,6 @@
 ﻿# Log Analyser - C# Console App :pager:
 
+TODO update this table of content once done
 ## Table of Contents
 - [Overview](#overview)
 - [Objectives](#objectives)
@@ -41,10 +42,21 @@ The goal of this application is to answer three main questions:
 The project structure is as follows:
 ```bash
 .
-├── Data
-│   └── example.log
-├── LogAnalyser.csproj
-├── Program.cs
+│── Parse_URL
+│   │── Data
+│   │   └── example.log
+│   │── Models
+│   │   └── LogEntry.cs
+│   │── Utilities
+│   │   │── LogParser.cs
+│   │   └── LogStatistics.cs
+│   │── Program.cs
+│   └── LogAnalyser.csproj
+│── Parse_URL.Tests
+│   │──LogParserTests.cs
+│   │──LogStatisticsTests.cs
+│   └──Parse_URL.Tests.csproj
+│── Parse_URL.sln
 └── README.md
 ```
 - `Data`: Contains the sample log file.
