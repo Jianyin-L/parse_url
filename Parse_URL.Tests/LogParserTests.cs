@@ -1,4 +1,3 @@
-using Parse_URL.Models;
 using Parse_URL.Utilities;
 using System.Globalization;
 
@@ -21,7 +20,7 @@ public class LogParserTests
         Assert.Equal("177.71.128.21", result[0].IPAddress);
         Assert.Equal("-", result[0].User);
         Assert.Equal("10/Jul/2018:22:21:28 +02:00", result[0].Timestamp.ToString("dd/MMM/yyyy:HH:mm:ss zzz", CultureInfo.InvariantCulture));
-        Assert.Equal("GET", result[0].HttpMethod);
+        Assert.Equal("GET", result[0].Method.ToString());
         Assert.Equal("/home", result[0].Url);
         Assert.Equal(200, result[0].StatusCode);
         Assert.Equal(3574, result[0].ResponseSize);
