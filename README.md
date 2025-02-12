@@ -44,24 +44,23 @@ The project structure is as follows:
 .
 │── Parse_URL
 │   │── Data
-│   │   └── example.log
 │   │── Models
-│   │   └── LogEntry.cs
 │   │── Utilities
-│   │   │── LogParser.cs
-│   │   └── LogStatistics.cs
-│   │── Program.cs
-│   └── LogAnalyser.csproj
+│   └── Program.cs
 │── Parse_URL.Tests
-│   │──LogParserTests.cs
-│   │──LogStatisticsTests.cs
-│   └──Parse_URL.Tests.csproj
-│── Parse_URL.sln
-└── README.md
+└── Parse_URL.sln
 ```
-- `Data`: Contains the sample log file.
 
-TODO: Update this after the project structure is finalised.
+- `Parse_URL` folder: Contains the main application code.
+	- `Data`: Contains the sample log file `example.log`.
+	- `Models`: Contains the data models used in the application.
+	- `Utilities`: Contains functions to parse log entries and calculate statistics.
+	- `Program.cs`: The entry point of the application.
+- `Parse_URL.Tests` folder: Contains the unit tests for the application.
+- `Parse_URL.sln`: The solution file for the project.
+
+## Assumptions :bulb:
+- The log file is in the Common Log Format (CLF) or Combined Log Format and they are well-formed 2xx success logs. 
 
 ## Features :sparkles:
 The `Program.cs` file is the entry point of the application and you can customise the application's behaviour by modifying this file in the following ways: 
@@ -162,11 +161,6 @@ which means:
 - Support other arguments, such as specifying the number of top URLs and IPs to display, whether to include ties, etc. 
 
 ### Data Handling
-- Support parsing error logs, not just 2xx success logs.
-    ```bash
-    // Example error log
-    [Fri Jul 14 14:32:14.873076 2024] [core:notice] [pid 1234] AH00094: Command line: '/usr/sbin/httpd -D FOREGROUND'
-    ```
 - Better handle various data structures, such as handling IP addresses in IPv6 format, handling different date formats, etc.
 
 ## Reference :books:
