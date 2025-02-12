@@ -1,4 +1,4 @@
-﻿namespace Parse_URL.Model;
+﻿namespace Parse_URL.Models;
 
 public class LogEntry
 {

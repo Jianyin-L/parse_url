@@ -1,4 +1,4 @@
-using Parse_URL.Model;
+using Parse_URL.Models;
 using Parse_URL.Utilities;
 
 namespace Parse_URL.Tests;

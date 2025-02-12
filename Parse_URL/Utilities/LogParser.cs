@@ -1,4 +1,4 @@
-﻿using Parse_URL.Model;
+﻿using Parse_URL.Models;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
