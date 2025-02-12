@@ -118,7 +118,7 @@ public class LogParserTests
     {
         // Arrange
         var logFilePath = CreateTestLogFile(
-            "222.22.222.22 - - [10/Jul/2018:22:21:28 +0200] \"GET /home HTTP/1.1\" 404 3574 \"-\" \"Mozilla/5.0\"" // status code 404
+            "222.22.222.22 - - [10/Jul/2018:22:21:28 +0200] \"GET /home HTTP/1.1\" 201 3574 \"-\" \"Mozilla/5.0\"" // status code 201
         );
 
         // Act
@@ -126,7 +126,7 @@ public class LogParserTests
 
         // Assert
         Assert.Single(result);
-        Assert.Equal(404, result[0].StatusCode);
+        Assert.Equal(201, result[0].StatusCode);
     }
 
     [Fact]
@@ -134,16 +134,21 @@ public class LogParserTests
     {
         // Arrange
         var logFilePath = CreateTestLogFile(
-            "111.11.111.11 - - [10/Jul/2018:22:21:28 +0200] \"GET /home HTTP/1.1\" 200 3574 \"-\" \"Mozilla/5.0\"", // user is missing
-            "222.22.222.22 - - [10/Jul/2018:22:21:28 +0200] \"GET /home HTTP/1.1\" 200 - \"-\" \"Mozilla/5.0\"", // response size is missing
-            "177.71.128.21 - - [10/Jul/2018:22:21:28 +0200] \"GET /home HTTP/1.1\" 200 3574 \"-\" \"-\"" // user agent is missing
+            "- - admin [10/Jul/2018:22:21:28 +0200] \"GET /home HTTP/1.1\" 200 3574 \"-\" \"Mozilla/5.0\"",  // IP is missing
+            "177.71.128.21 - - [10/Jul/2018:22:21:28 +0200] \"GET /home HTTP/1.1\" 200 3574 \"-\" \"Mozilla/5.0\"", // User is missing
+            "177.71.128.21 - admin [-] \"GET /home HTTP/1.1\" 200 3574 \"-\" \"Mozilla/5.0\"",    // Timestamp is missing
+            "177.71.128.21 - admin [10/Jul/2018:22:21:28 +0200] \"- /home HTTP/1.1\" 200 3574 \"-\" \"Mozilla/5.0\"",   // HTTP Method is missing
+            "177.71.128.21 - admin [10/Jul/2018:22:21:28 +0200] \"GET - HTTP/1.1\" 200 3574 \"-\" \"Mozilla/5.0\"", // URL is missing
+            "177.71.128.21 - admin [10/Jul/2018:22:21:28 +0200] \"GET /home HTTP/1.1\" - 3574 \"-\" \"Mozilla/5.0\"",   // Status code is missing
+            "177.71.128.21 - admin [10/Jul/2018:22:21:28 +0200] \"GET /home HTTP/1.1\" 200 - \"-\" \"Mozilla/5.0\"",    // Response size is missing
+            "177.71.128.21 - admin [10/Jul/2018:22:21:28 +0200] \"GET /home HTTP/1.1\" 200 3574 \"-\" \"-\""   // Agent is missing
         );
 
         // Act
         var result = LogParser.ParseLogFile(logFilePath);
 
         // Assert
-        Assert.Equal(3, result.Count);
+        Assert.Equal(8, result.Count);
     }
 
     [Fact]

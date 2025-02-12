@@ -13,5 +13,6 @@ public enum HttpMethod
     HEAD,
     OPTIONS,
     TRACE,
-    CONNECT
+    CONNECT,
+    MISSING
 }

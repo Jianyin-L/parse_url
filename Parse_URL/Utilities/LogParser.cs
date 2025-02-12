@@ -7,7 +7,7 @@ namespace Parse_URL.Utilities;
 public class LogParser
 {
     private static readonly Regex LogPattern = new Regex(
-        @"(?<ip>\d+\.\d+\.\d+\.\d+|-)\s+-\s+(?<user>\S+)\s+\[(?<timestamp>[^\]]+)]\s+""(?<method>[^\s]+)\s+(?<url>[^\s]+).*""\s+(?<status>\d{3})\s+(?<size>\d+|-)\s+"".*""\s+""(?<useragent>.*)""",   // TODO: missing value in timestamp, status code etc..
+        @"(?<ip>-|\d+\.\d+\.\d+\.\d+)\s+-\s+(?<user>\S+)\s+\[(?<timestamp>-|[^\]]+)]\s+""(?<method>-|[^\s]+)\s+(?<url>-|[^\s]+|).*""\s+(?<status>-|\d{3})\s+(?<size>-|\d+)\s+"".*""\s+""(?<useragent>.*)""",
         RegexOptions.Compiled);
 
     public static List<LogEntry> ParseLogFile(string filePath)
@@ -29,7 +29,11 @@ public class LogParser
     private static LogEntry? ParseLogLine(string entry)
     {
         var match = LogPattern.Match(entry);
-        var isHttpMethod = Enum.TryParse<Models.HttpMethod>(match.Groups["method"].Value.ToUpper(), out var method);
+
+        var methodString = match.Groups["method"].Value;
+        var isHttpMethod = Enum.TryParse(
+            methodString.Equals("-", StringComparison.CurrentCultureIgnoreCase) ? "MISSING" : methodString.ToUpper(),
+            out Models.HttpMethod method);
 
         return !match.Success
             || !isHttpMethod
