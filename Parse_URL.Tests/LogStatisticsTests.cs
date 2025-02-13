@@ -1,5 +1,5 @@
 using Parse_URL.Models;
-using Parse_URL.Utilities;
+using Parse_URL.Services;
 
 namespace Parse_URL.Tests;
 

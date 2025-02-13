@@ -1,4 +1,4 @@
-using Parse_URL.Utilities;
+using Parse_URL.Services;
 using System.Globalization;
 
 namespace Parse_URL.Tests;

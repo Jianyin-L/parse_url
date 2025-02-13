@@ -1,4 +1,4 @@
-﻿using Parse_URL.Utilities;
+﻿using Parse_URL.Services;
 
 var filePath = "./Data/example.log";
 var topUrls = 3;

@@ -1,6 +1,6 @@
 ﻿using Parse_URL.Models;
 
-namespace Parse_URL.Utilities;
+namespace Parse_URL.Services;
 
 public class LogStatistics
 {

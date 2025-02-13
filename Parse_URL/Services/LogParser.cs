@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
 
-namespace Parse_URL.Utilities;
+namespace Parse_URL.Services;
 
 public class LogParser
 {
