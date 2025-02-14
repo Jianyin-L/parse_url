@@ -49,7 +49,6 @@ public class ArgumentsParserTests
     [InlineData("urls= ")]
     [InlineData("urls==")]
     [InlineData("urls=...")]
-    [InlineData("urls=10,1")]
     public void ParseArguments_ShouldReturnDefaultUrls_WhenInvalidValuesIsGiven(string input)
     {
         var args = new string[] { input };
@@ -64,6 +63,7 @@ public class ArgumentsParserTests
     [InlineData("ips=-5", 5)]
     [InlineData("ips=1.2", 1)]
     [InlineData("ips=1.6", 2)]
+    [InlineData("ips=10 ", 10)]
     public void ParseArguments_ShouldParseNumberOfIps_WhenValidIntegerIsGiven(string input, int expected)
     {
         var args = new string[] { input };

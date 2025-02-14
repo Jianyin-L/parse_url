@@ -4,17 +4,21 @@ namespace Parse_URL.Utilities;
 
 public static class ArgumentsParser
 {
+    // TODO: Move to a configuration file? Will it works in exe? Or at least a static class?
     private const string DefaultData = "./Data/example.log";
+    private const int DefaultUrls = 3;
+    private const int DefaultIps = 3;
+    private const bool DefaultFilterMissingField = false;
+    private const bool DefaultIncludeTies = false;
 
     public static (string filePath, int numberOfUrls, int numberOfIps, bool filterMissingField, bool includeTies) ParseArguments(string[] args)
     {
-        // TODO: Move to a configuration file? Will it works in exe? 
-        // Default values
+        // Simplify these?
         var path = Path.Combine(Directory.GetCurrentDirectory(), DefaultData);
-        var numberOfUrls = 3;
-        var numberOfIps = 3;
-        var filterMissingField = false;
-        var includeTies = false;
+        var numberOfUrls = DefaultUrls;
+        var numberOfIps = DefaultIps;
+        var filterMissingField = DefaultFilterMissingField;
+        var includeTies = DefaultIncludeTies;
 
         foreach (var arg in args)
         {
@@ -37,16 +41,16 @@ public static class ArgumentsParser
                     }
                     break;
                 case "urls":
-                    numberOfUrls = ParsePositiveInt(value, numberOfUrls);
+                    numberOfUrls = ParsePositiveInt(value, DefaultUrls);
                     break;
                 case "ips":
-                    numberOfIps = ParsePositiveInt(value, numberOfIps);
+                    numberOfIps = ParsePositiveInt(value, DefaultIps);
                     break;
                 case "filtermissing":
-                    filterMissingField = ParseBool(value);
+                    filterMissingField = ParseBool(value, DefaultFilterMissingField);
                     break;
                 case "includeties":
-                    includeTies = ParseBool(value);
+                    includeTies = ParseBool(value, DefaultIncludeTies);
                     break;
             }
         }
@@ -60,16 +64,33 @@ public static class ArgumentsParser
         {
             return (int)Math.Round(Math.Abs(number));
         }
+        Console.WriteLine($"'{value}' is not a valid value. Defaulting to {defaultValue}.");
         return defaultValue;
     }
 
-    private static bool ParseBool(string value)
+    private static bool ParseBool(string value, bool defaultValue)
     {
-        return value.ToLower() switch
+        value = value.Trim().ToLower();
+
+        switch (value)
         {
-            "true" or "yes" or "1" or "y" or "t" => true,
-            "false" or "no" or "0" or "n" or "f" => false,
-            _ => false // Default to false if invalid input
-        };
+            case "true":
+            case "t":
+            case "yes":
+            case "y":
+            case "1":
+                return true;
+
+            case "false":
+            case "f":
+            case "no":
+            case "n":
+            case "0":
+                return false;
+
+            default:
+                Console.WriteLine($"'{value}' is not a valid value. Defaulting to {defaultValue}.");
+                return false;
+        }
     }
 }
