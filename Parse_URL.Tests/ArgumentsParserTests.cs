@@ -17,19 +17,12 @@ public class ArgumentsParserTests
         Assert.False(includeTies);
     }
 
-    //[Fact]
-    //public void ParseArguments_ShouldParseFilePath_WhenProvided()
-    //{
-    //    var args = new[] { "file=C:\\logs\\access.log" };
-    //    var (filePath, _, _, _, _) = ArgumentsParser.ParseArguments(args);
-
-    //    Assert.Equal("C:\\logs\\access.log", filePath);
-    //}
-
-    [Fact]
-    public void ParseArguments_ShouldReturnDefaultFilePath_WhenProvidedNotValid()
+    [Theory]
+    [InlineData("file=abcdefg.log")]
+    [InlineData("file= ")]
+    public void ParseArguments_ShouldReturnDefaultFilePath_WhenInValidFileIsGiven(string file)
     {
-        var args = new[] { "file=abcdefg.log" };
+        var args = new[] { file };
         var (filePath, _, _, _, _) = ArgumentsParser.ParseArguments(args);
 
         Assert.Contains("example.log", filePath);
@@ -40,7 +33,7 @@ public class ArgumentsParserTests
     [InlineData("urls=-5", 5)]
     [InlineData("urls=1.2", 1)]
     [InlineData("urls=1.6", 2)]
-    public void ParseArguments_ShouldParseNumberOfUrls_WhenValidIntegerProvided(string input, int expected)
+    public void ParseArguments_ShouldParseNumberOfUrls_WhenValidIntegerIsGiven(string input, int expected)
     {
         var args = new string[] { input };
 
@@ -55,7 +48,7 @@ public class ArgumentsParserTests
     [InlineData("urls= ")]
     [InlineData("urls==")]
     [InlineData("urls=...")]
-    public void ParseArguments_ShouldReturnDefaultUrls_WhenInvalidValuesGiven(string input)
+    public void ParseArguments_ShouldReturnDefaultUrls_WhenInvalidValuesIsGiven(string input)
     {
         var args = new string[] { input };
         var (_, urls, _, _, _) = ArgumentsParser.ParseArguments(args);
@@ -68,7 +61,7 @@ public class ArgumentsParserTests
     [InlineData("ips=-5", 5)]
     [InlineData("ips=1.2", 1)]
     [InlineData("ips=1.6", 2)]
-    public void ParseArguments_ShouldParseNumberOfIps_WhenValidIntegerProvided(string input, int expected)
+    public void ParseArguments_ShouldParseNumberOfIps_WhenValidIntegerIsGiven(string input, int expected)
     {
         var args = new string[] { input };
 
