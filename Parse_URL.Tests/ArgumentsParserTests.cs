@@ -30,6 +30,7 @@ public class ArgumentsParserTests
 
     [Theory]
     [InlineData("urls=10", 10)]
+    [InlineData("urls=0", 3)]
     [InlineData("urls=-5", 5)]
     [InlineData("urls=1.2", 1)]
     [InlineData("urls=1.6", 2)]
@@ -48,6 +49,7 @@ public class ArgumentsParserTests
     [InlineData("urls= ")]
     [InlineData("urls==")]
     [InlineData("urls=...")]
+    [InlineData("urls=10,1")]
     public void ParseArguments_ShouldReturnDefaultUrls_WhenInvalidValuesIsGiven(string input)
     {
         var args = new string[] { input };
@@ -58,6 +60,7 @@ public class ArgumentsParserTests
 
     [Theory]
     [InlineData("ips=10", 10)]
+    [InlineData("ips=0", 3)]
     [InlineData("ips=-5", 5)]
     [InlineData("ips=1.2", 1)]
     [InlineData("ips=1.6", 2)]

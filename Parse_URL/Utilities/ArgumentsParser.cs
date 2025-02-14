@@ -56,9 +56,9 @@ public static class ArgumentsParser
 
     private static int ParsePositiveInt(string value, int defaultValue)
     {
-        if (double.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out var number))
+        if (!string.Equals(value, "0") && (double.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out var number)))
         {
-            return (int)Math.Round(Math.Abs(number)); // Round and ensure it's at least 1
+            return (int)Math.Round(Math.Abs(number));
         }
         return defaultValue;
     }
