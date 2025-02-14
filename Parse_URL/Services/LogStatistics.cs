@@ -2,7 +2,7 @@
 
 namespace Parse_URL.Services;
 
-public class LogStatistics
+public static class LogStatistics
 {
     public static int CountUniqueItems<T>(List<LogEntry> logEntries, Func<LogEntry, T> selector, bool filterMissing = false)
     {
