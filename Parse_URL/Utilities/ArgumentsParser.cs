@@ -7,7 +7,7 @@ public static class ArgumentsParser
 {
     public static (string FilePath, int NumberOfUrls, int NumberOfIps, bool FilterMissingField, bool IncludeTies) ParseArguments(string[] args, DefaultSettings defaults)
     {
-        // Possible to simpifly this? The defaults.DefaultXXX is being used twice
+        // TODO: Possible to simpifly this? The defaults.DefaultXXX is being used twice
         var path = Path.Combine(Directory.GetCurrentDirectory(), defaults.FilePath);
         var numberOfUrls = defaults.NumberOfUrls;
         var numberOfIps = defaults.NumberOfIps;
