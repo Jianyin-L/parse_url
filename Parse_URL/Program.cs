@@ -10,10 +10,10 @@ var topIPsIncludeTies = LogStatistics.GetTopItems(logEntries, log => log.IPAddre
 Console.WriteLine(
     "Settings:\n" +
     $"  File Path: {filePath}\n" +
-    $"  Top URLs: {topUrls}\n" +
-    $"  Top IPs: {topIPs}\n" +
-    $"  Filter out entries if lacking required field: {filterMissing}\n" +
-    $"  Include ties: {includeTies}\n"
+    $"  Top N Most Visited URLs: {topUrls}\n" +
+    $"  Top N Active IPs: {topIPs}\n" +
+    $"  Filter out incomplete entries in responses: {filterMissing}\n" +
+    $"  Include ties in responses: {includeTies}\n"
     );
 
 Console.WriteLine("=========================================");

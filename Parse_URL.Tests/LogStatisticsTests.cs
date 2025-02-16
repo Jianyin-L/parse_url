@@ -111,7 +111,7 @@ public class LogStatisticsTests
     }
 
     [Fact]
-    public void GetTopItems_ShouldReturnAllUsersWhereNHigherThanNoOfUniqueUsers()
+    public void GetTopItems_ShouldReturnAllUsers_WhenNHigherThanNoOfUniqueUsers()
     {
         var logEntries = new List<LogEntry>
         {
@@ -131,7 +131,7 @@ public class LogStatisticsTests
     }
 
     [Fact]
-    public void GetTopItems_ShouldReturnEmptyResultIfRequiredFieldMissing()
+    public void GetTopItems_ShouldReturnEmptyResul_WhenfRequiredFieldMissing()
     {
         var logEntries = new List<LogEntry>{
             new() { User = "ABC123"},
