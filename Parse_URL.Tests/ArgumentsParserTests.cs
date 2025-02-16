@@ -17,6 +17,21 @@ public class ArgumentsParserTests
         Assert.False(includeTies);
     }
 
+    [Fact]
+    public void ParseArguments_ShouldReturnDefaultValues_WhenInvalidArgumentsProvided()
+    {
+        var args = new[] {
+            "XYZ=abcdefg.log ABC=10 Random=10 YYY=true ZZZ=true",
+        };
+        var (filePath, urls, ips, filterMissing, includeTies) = ArgumentsParser.ParseArguments(args);
+
+        Assert.Contains("example.log", filePath);
+        Assert.Equal(3, urls);
+        Assert.Equal(3, ips);
+        Assert.False(filterMissing);
+        Assert.False(includeTies);
+    }
+
     [Theory]
     [InlineData("file=abcdefg.log")]
     [InlineData("file= ")]
