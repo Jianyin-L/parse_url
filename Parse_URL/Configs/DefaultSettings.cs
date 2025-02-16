@@ -2,9 +2,9 @@
 
 public class DefaultSettings
 {
-    public string DefaultData { get; set; } = "./Data/example.log";
-    public int DefaultUrls { get; set; } = 3;
-    public int DefaultIps { get; set; } = 3;
-    public bool DefaultFilterMissingField { get; set; } = false;
-    public bool DefaultIncludeTies { get; set; } = false;
+    public string FilePath { get; set; } = "./Data/example.log";
+    public int NumberOfUrls { get; set; } = 3;
+    public int NumberOfIps { get; set; } = 3;
+    public bool FilterMissingField { get; set; } = false;
+    public bool IncludeTies { get; set; } = false;
 }

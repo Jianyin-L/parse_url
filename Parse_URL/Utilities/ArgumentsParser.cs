@@ -8,11 +8,11 @@ public static class ArgumentsParser
     public static (string FilePath, int NumberOfUrls, int NumberOfIps, bool FilterMissingField, bool IncludeTies) ParseArguments(string[] args, DefaultSettings defaults)
     {
         // Possible to simpifly this? The defaults.DefaultXXX is being used twice
-        var path = Path.Combine(Directory.GetCurrentDirectory(), defaults.DefaultData);
-        var numberOfUrls = defaults.DefaultUrls;
-        var numberOfIps = defaults.DefaultIps;
-        var filterMissingField = defaults.DefaultFilterMissingField;
-        var includeTies = defaults.DefaultIncludeTies;
+        var path = Path.Combine(Directory.GetCurrentDirectory(), defaults.FilePath);
+        var numberOfUrls = defaults.NumberOfUrls;
+        var numberOfIps = defaults.NumberOfIps;
+        var filterMissingField = defaults.FilterMissingField;
+        var includeTies = defaults.IncludeTies;
 
         foreach (var arg in args)
         {
@@ -31,20 +31,23 @@ public static class ArgumentsParser
                     }
                     else
                     {
-                        Console.WriteLine($"File does not exist. Use Default: {defaults.DefaultData}\n");
+                        Console.WriteLine($"File does not exist. Use Default: {defaults.FilePath}\n");
                     }
                     break;
                 case "urls":
-                    numberOfUrls = ParsePositiveInt(value, defaults.DefaultUrls);
+                    numberOfUrls = ParsePositiveInt(value, defaults.NumberOfUrls);
                     break;
                 case "ips":
-                    numberOfIps = ParsePositiveInt(value, defaults.DefaultIps);
+                    numberOfIps = ParsePositiveInt(value, defaults.NumberOfIps);
                     break;
                 case "filtermissing":
-                    filterMissingField = ParseBool(value, defaults.DefaultFilterMissingField);
+                    filterMissingField = ParseBool(value, defaults.FilterMissingField);
                     break;
                 case "includeties":
-                    includeTies = ParseBool(value, defaults.DefaultIncludeTies);
+                    includeTies = ParseBool(value, defaults.IncludeTies);
+                    break;
+                default:
+                    Console.WriteLine($"Unknown argument '{key}' will be ignored.");
                     break;
             }
         }
