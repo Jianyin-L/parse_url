@@ -1,24 +1,18 @@
-﻿using System.Globalization;
+﻿using Parse_URL.Configs;
+using System.Globalization;
 
 namespace Parse_URL.Utilities;
 
 public static class ArgumentsParser
 {
-    // TODO: Move to a configuration file? Will it works in exe? Or at least a static class?
-    private const string DefaultData = "./Data/example.log";
-    private const int DefaultUrls = 3;
-    private const int DefaultIps = 3;
-    private const bool DefaultFilterMissingField = false;
-    private const bool DefaultIncludeTies = false;
-
-    public static (string filePath, int numberOfUrls, int numberOfIps, bool filterMissingField, bool includeTies) ParseArguments(string[] args)
+    public static (string FilePath, int NumberOfUrls, int NumberOfIps, bool FilterMissingField, bool IncludeTies) ParseArguments(string[] args, DefaultSettings defaults)
     {
-        // Simplify these?
-        var path = Path.Combine(Directory.GetCurrentDirectory(), DefaultData);
-        var numberOfUrls = DefaultUrls;
-        var numberOfIps = DefaultIps;
-        var filterMissingField = DefaultFilterMissingField;
-        var includeTies = DefaultIncludeTies;
+        // Possible to simpifly this? The defaults.DefaultXXX is being used twice
+        var path = Path.Combine(Directory.GetCurrentDirectory(), defaults.DefaultData);
+        var numberOfUrls = defaults.DefaultUrls;
+        var numberOfIps = defaults.DefaultIps;
+        var filterMissingField = defaults.DefaultFilterMissingField;
+        var includeTies = defaults.DefaultIncludeTies;
 
         foreach (var arg in args)
         {
@@ -37,20 +31,20 @@ public static class ArgumentsParser
                     }
                     else
                     {
-                        Console.WriteLine($"File does not exist. Use Default: {DefaultData}\n");
+                        Console.WriteLine($"File does not exist. Use Default: {defaults.DefaultData}\n");
                     }
                     break;
                 case "urls":
-                    numberOfUrls = ParsePositiveInt(value, DefaultUrls);
+                    numberOfUrls = ParsePositiveInt(value, defaults.DefaultUrls);
                     break;
                 case "ips":
-                    numberOfIps = ParsePositiveInt(value, DefaultIps);
+                    numberOfIps = ParsePositiveInt(value, defaults.DefaultIps);
                     break;
                 case "filtermissing":
-                    filterMissingField = ParseBool(value, DefaultFilterMissingField);
+                    filterMissingField = ParseBool(value, defaults.DefaultFilterMissingField);
                     break;
                 case "includeties":
-                    includeTies = ParseBool(value, DefaultIncludeTies);
+                    includeTies = ParseBool(value, defaults.DefaultIncludeTies);
                     break;
             }
         }

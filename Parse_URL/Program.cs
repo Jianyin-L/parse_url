@@ -1,12 +1,26 @@
-﻿using Parse_URL.Services;
+﻿using Parse_URL.Configs;
+using Parse_URL.Services;
 using Parse_URL.Utilities;
+using Microsoft.Extensions.Configuration;
 
-var (filePath, topUrls, topIPs, filterMissing, includeTies) = ArgumentsParser.ParseArguments(args);
+// Config
+var configuration = new ConfigurationBuilder()
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .Build();
 
+var settings = new DefaultSettings();
+configuration.GetSection("Defaults").Bind(settings);
+
+// Read arguments
+var (filePath, topUrls, topIPs, filterMissing, includeTies) = ArgumentsParser.ParseArguments(args, settings);
+
+// Parse log file
 var logEntries = LogParser.ParseLogFile(filePath);
 var topUrlsExcludeTies = LogStatistics.GetTopItems(logEntries, log => log.Url, topUrls, filterMissing, includeTies);
 var topIPsIncludeTies = LogStatistics.GetTopItems(logEntries, log => log.IPAddress, topIPs, filterMissing, includeTies);
 
+// Output
 Console.WriteLine(
     "Settings:\n" +
     $"  File Path: {filePath}\n" +
