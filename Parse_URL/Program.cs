@@ -10,7 +10,7 @@ var configuration = new ConfigurationBuilder()
     .Build();
 
 var settings = new DefaultSettings();
-configuration.GetSection(DefaultSettings.SectionName).Bind(settings);
+configuration.GetRequiredSection(DefaultSettings.SectionName).Bind(settings);
 
 // Read arguments
 var (filePath, topUrls, topIPs, filterMissing, includeTies) = ArgumentsParser.ParseArguments(args, settings);
