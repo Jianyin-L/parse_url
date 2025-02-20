@@ -40,7 +40,14 @@ public class DefaultSettingsTests
     [Fact]
     public void DefaultSettings_ShouldFallbackToDefaults_WhenConfigIsMissing()
     {
-        var settings = new Dictionary<string, string?>();
+        var settings = new Dictionary<string, string?>
+        {
+            { "Defaults:FilePath", null },
+            { "Defaults:NumberOfUrls", "" },
+            { "Defaults:NumberOfIps", "     " },
+            { "FilterMissingField", "true" },
+            { "XYZ:IncludeTies", "false" }
+        };
         var config = GetMockConfig(settings);
         var defaultSettings = new DefaultSettings();
 

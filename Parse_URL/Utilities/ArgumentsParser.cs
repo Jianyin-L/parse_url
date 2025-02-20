@@ -1,5 +1,4 @@
 ﻿using Parse_URL.Configs;
-using System.Globalization;
 
 namespace Parse_URL.Utilities;
 
@@ -25,26 +24,19 @@ public static class ArgumentsParser
             switch (key)
             {
                 case "file":
-                    if (File.Exists(value))
-                    {
-                        path = value;
-                    }
-                    else
-                    {
-                        Console.WriteLine($"File does not exist. Use Default: {defaults.FilePath}\n");
-                    }
+                    path = ArgValidationHelper.ParseFilePath(value, defaults.FilePath);
                     break;
                 case "urls":
-                    numberOfUrls = ParsePositiveInt(value, defaults.NumberOfUrls);
+                    numberOfUrls = ArgValidationHelper.ParseInt(value, defaults.NumberOfUrls);
                     break;
                 case "ips":
-                    numberOfIps = ParsePositiveInt(value, defaults.NumberOfIps);
+                    numberOfIps = ArgValidationHelper.ParseInt(value, defaults.NumberOfIps);
                     break;
                 case "filtermissing":
-                    filterMissingField = ParseBool(value, defaults.FilterMissingField);
+                    filterMissingField = ArgValidationHelper.ParseBool(value, defaults.FilterMissingField);
                     break;
                 case "includeties":
-                    includeTies = ParseBool(value, defaults.IncludeTies);
+                    includeTies = ArgValidationHelper.ParseBool(value, defaults.IncludeTies);
                     break;
                 default:
                     Console.WriteLine($"Unknown argument '{key}' will be ignored.");
@@ -55,39 +47,4 @@ public static class ArgumentsParser
         return (path, numberOfUrls, numberOfIps, filterMissingField, includeTies);
     }
 
-    private static int ParsePositiveInt(string value, int defaultValue)
-    {
-        if (!string.Equals(value, "0") && (double.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out var number)))
-        {
-            return (int)Math.Round(Math.Abs(number));
-        }
-        Console.WriteLine($"'{value}' is not a valid value. Defaulting to {defaultValue}.");
-        return defaultValue;
-    }
-
-    private static bool ParseBool(string value, bool defaultValue)
-    {
-        value = value.Trim().ToLower();
-
-        switch (value)
-        {
-            case "true":
-            case "t":
-            case "yes":
-            case "y":
-            case "1":
-                return true;
-
-            case "false":
-            case "f":
-            case "no":
-            case "n":
-            case "0":
-                return false;
-
-            default:
-                Console.WriteLine($"'{value}' is not a valid value. Defaulting to {defaultValue}.");
-                return false;
-        }
-    }
 }
