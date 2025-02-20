@@ -4,7 +4,7 @@ namespace Parse_URL.Utilities;
 
 public static class ArgParser
 {
-    public static (string FilePath, int NumberOfUrls, int NumberOfIps, bool FilterMissingField, bool IncludeTies) ParseArguments(string[] args, DefaultSettings defaults)
+    public static (string FilePath, int NumberOfUrls, int NumberOfIps, bool FilterMissingField, bool IncludeTies) ParseArguments(string[] args, AppSettings defaults)
     {
         // TODO: Possible to simpifly this? The defaults.DefaultXXX is being used twice
         var path = Path.Combine(Directory.GetCurrentDirectory(), defaults.FilePath);

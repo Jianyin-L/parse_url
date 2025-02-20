@@ -28,7 +28,7 @@ public class ArgumentsParserTests
     public void ParseArguments_ShouldReturnDefaultValues_WhenNoArgumentsProvided()
     {
         var config = GetMockConfig();
-        var defaultSettings = new DefaultSettings();
+        var defaultSettings = new AppSettings();
         config.GetSection("Defaults").Bind(defaultSettings);
 
         var args = Array.Empty<string>();
@@ -45,7 +45,7 @@ public class ArgumentsParserTests
     public void ParseArguments_ShouldReturnDefaultValues_WhenInvalidArgumentsProvided()
     {
         var config = GetMockConfig();
-        var defaultSettings = new DefaultSettings();
+        var defaultSettings = new AppSettings();
         config.GetSection("Defaults").Bind(defaultSettings);
         var args = new[] {
             "XYZ=abcdefg.log ABC=10 Random=10 YYY=true ZZZ=true",
@@ -66,7 +66,7 @@ public class ArgumentsParserTests
     public void ParseArguments_ShouldReturnDefaultFilePath_WhenInValidFileIsGiven(string file)
     {
         var config = GetMockConfig();
-        var defaultSettings = new DefaultSettings();
+        var defaultSettings = new AppSettings();
         config.GetSection("Defaults").Bind(defaultSettings);
         var args = new[] { file };
 
@@ -84,7 +84,7 @@ public class ArgumentsParserTests
     public void ParseArguments_ShouldParseNumberOfUrls_WhenValidIntegerIsGiven(string input, int expected)
     {
         var config = GetMockConfig();
-        var defaultSettings = new DefaultSettings();
+        var defaultSettings = new AppSettings();
         config.GetSection("Defaults").Bind(defaultSettings);
         var args = new string[] { input };
 
@@ -102,7 +102,7 @@ public class ArgumentsParserTests
     public void ParseArguments_ShouldReturnDefaultUrls_WhenInvalidValuesIsGiven(string input)
     {
         var config = GetMockConfig();
-        var defaultSettings = new DefaultSettings();
+        var defaultSettings = new AppSettings();
         config.GetSection("Defaults").Bind(defaultSettings);
         var args = new string[] { input };
 
@@ -121,7 +121,7 @@ public class ArgumentsParserTests
     public void ParseArguments_ShouldParseNumberOfIps_WhenValidIntegerIsGiven(string input, int expected)
     {
         var config = GetMockConfig();
-        var defaultSettings = new DefaultSettings();
+        var defaultSettings = new AppSettings();
         config.GetSection("Defaults").Bind(defaultSettings);
         var args = new string[] { input };
 
@@ -139,7 +139,7 @@ public class ArgumentsParserTests
     public void ParseArguments_ShouldReturnDefaultIps_WhenInvalidValuesIsGiven(string input)
     {
         var config = GetMockConfig();
-        var defaultSettings = new DefaultSettings();
+        var defaultSettings = new AppSettings();
         config.GetSection("Defaults").Bind(defaultSettings);
         var args = new[] { input };
 
@@ -158,7 +158,7 @@ public class ArgumentsParserTests
     public void ParseArguments_ShouldParseBooleanFlags_WhenValidValueIsGiven(string missing, string ties, bool expectedMissing, bool expectedTies)
     {
         var config = GetMockConfig();
-        var defaultSettings = new DefaultSettings();
+        var defaultSettings = new AppSettings();
         config.GetSection("Defaults").Bind(defaultSettings);
         var args = new[] { missing, ties };
 
@@ -174,7 +174,7 @@ public class ArgumentsParserTests
     public void ParseArguments_ShouldReturnDefaultBooleanFlags_WhenInvalidValueIsGiven(string missing, string ties, bool expectedMissing, bool expectedTies)
     {
         var config = GetMockConfig();
-        var defaultSettings = new DefaultSettings();
+        var defaultSettings = new AppSettings();
         config.GetSection("Defaults").Bind(defaultSettings);
         var args = new[] { missing, ties };
 

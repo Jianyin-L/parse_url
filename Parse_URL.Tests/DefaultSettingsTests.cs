@@ -15,7 +15,7 @@ public class DefaultSettingsTests
     }
 
     [Fact]
-    public void DefaultSettings_ShouldLoadFromConfig_WhenConfigIsProvided()
+    public void DefaultSettings_ShouldLoadFromConfig_WhenValidConfigIsProvided()
     {
         var settings = new Dictionary<string, string?>
         {
@@ -26,9 +26,10 @@ public class DefaultSettingsTests
             { "Defaults:IncludeTies", "false" }
         };
         var config = GetMockConfig(settings);
-        var defaultSettings = new DefaultSettings();
+        var defaultSettings = new AppSettings();
 
         config.GetSection("Defaults").Bind(defaultSettings);
+        defaultSettings.Validate();
 
         Assert.Equal("XYZ.log", defaultSettings.FilePath);
         Assert.Equal(9, defaultSettings.NumberOfUrls);
@@ -38,7 +39,7 @@ public class DefaultSettingsTests
     }
 
     [Fact]
-    public void DefaultSettings_ShouldFallbackToDefaults_WhenConfigIsMissing()
+    public void DefaultSettings_ShouldFallbackToDefaults_WhenInvalidConfigIsProvided()
     {
         var settings = new Dictionary<string, string?>
         {
@@ -51,7 +52,9 @@ public class DefaultSettingsTests
         var config = GetMockConfig(settings);
         var defaultSettings = new DefaultSettings();
 
+        var defaultSettings = new AppSettings();
         config.GetSection("Defaults").Bind(defaultSettings);
+        defaultSettings.Validate();
 
         Assert.Equal("./Data/example.log", defaultSettings.FilePath);
         Assert.Equal(99, defaultSettings.NumberOfUrls);
