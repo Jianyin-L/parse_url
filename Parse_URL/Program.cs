@@ -13,7 +13,7 @@ var settings = new DefaultSettings();
 configuration.GetRequiredSection(DefaultSettings.SectionName).Bind(settings);
 
 // Read arguments
-var (filePath, topUrls, topIPs, filterMissing, includeTies) = ArgumentsParser.ParseArguments(args, settings);
+var (filePath, topUrls, topIPs, filterMissing, includeTies) = ArgParser.ParseArguments(args, settings);
 
 // Parse log file
 var logEntries = LogParser.ParseLogFile(filePath);

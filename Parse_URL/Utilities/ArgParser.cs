@@ -2,7 +2,7 @@
 
 namespace Parse_URL.Utilities;
 
-public static class ArgumentsParser
+public static class ArgParser
 {
     public static (string FilePath, int NumberOfUrls, int NumberOfIps, bool FilterMissingField, bool IncludeTies) ParseArguments(string[] args, DefaultSettings defaults)
     {

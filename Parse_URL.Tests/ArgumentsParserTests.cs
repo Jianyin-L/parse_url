@@ -32,7 +32,7 @@ public class ArgumentsParserTests
         config.GetSection("Defaults").Bind(defaultSettings);
 
         var args = Array.Empty<string>();
-        var (filePath, urls, ips, filterMissing, includeTies) = ArgumentsParser.ParseArguments(args, defaultSettings);
+        var (filePath, urls, ips, filterMissing, includeTies) = ArgParser.ParseArguments(args, defaultSettings);
 
         Assert.Contains("example.log", filePath);
         Assert.Equal(3, urls);
@@ -51,7 +51,7 @@ public class ArgumentsParserTests
             "XYZ=abcdefg.log ABC=10 Random=10 YYY=true ZZZ=true",
         };
 
-        var (filePath, urls, ips, filterMissing, includeTies) = ArgumentsParser.ParseArguments(args, defaultSettings);
+        var (filePath, urls, ips, filterMissing, includeTies) = ArgParser.ParseArguments(args, defaultSettings);
 
         Assert.Contains("example.log", filePath);
         Assert.Equal(3, urls);
@@ -70,7 +70,7 @@ public class ArgumentsParserTests
         config.GetSection("Defaults").Bind(defaultSettings);
         var args = new[] { file };
 
-        var (filePath, _, _, _, _) = ArgumentsParser.ParseArguments(args, defaultSettings);
+        var (filePath, _, _, _, _) = ArgParser.ParseArguments(args, defaultSettings);
 
         Assert.Contains("example.log", filePath);
     }
@@ -88,7 +88,7 @@ public class ArgumentsParserTests
         config.GetSection("Defaults").Bind(defaultSettings);
         var args = new string[] { input };
 
-        var (_, urls, _, _, _) = ArgumentsParser.ParseArguments(args, defaultSettings);
+        var (_, urls, _, _, _) = ArgParser.ParseArguments(args, defaultSettings);
 
         Assert.Equal(expected, urls);
     }
@@ -106,7 +106,7 @@ public class ArgumentsParserTests
         config.GetSection("Defaults").Bind(defaultSettings);
         var args = new string[] { input };
 
-        var (_, urls, _, _, _) = ArgumentsParser.ParseArguments(args, defaultSettings);
+        var (_, urls, _, _, _) = ArgParser.ParseArguments(args, defaultSettings);
 
         Assert.Equal(3, urls);
     }
@@ -125,7 +125,7 @@ public class ArgumentsParserTests
         config.GetSection("Defaults").Bind(defaultSettings);
         var args = new string[] { input };
 
-        var (_, _, ips, _, _) = ArgumentsParser.ParseArguments(args, defaultSettings);
+        var (_, _, ips, _, _) = ArgParser.ParseArguments(args, defaultSettings);
 
         Assert.Equal(expected, ips);
     }
@@ -143,7 +143,7 @@ public class ArgumentsParserTests
         config.GetSection("Defaults").Bind(defaultSettings);
         var args = new[] { input };
 
-        var (_, _, ips, _, _) = ArgumentsParser.ParseArguments(args, defaultSettings);
+        var (_, _, ips, _, _) = ArgParser.ParseArguments(args, defaultSettings);
 
         Assert.Equal(3, ips);
     }
@@ -162,7 +162,7 @@ public class ArgumentsParserTests
         config.GetSection("Defaults").Bind(defaultSettings);
         var args = new[] { missing, ties };
 
-        var (_, _, _, filterMissing, includeTies) = ArgumentsParser.ParseArguments(args, defaultSettings);
+        var (_, _, _, filterMissing, includeTies) = ArgParser.ParseArguments(args, defaultSettings);
 
         Assert.Equal(expectedMissing, filterMissing);
         Assert.Equal(expectedTies, includeTies);
@@ -178,7 +178,7 @@ public class ArgumentsParserTests
         config.GetSection("Defaults").Bind(defaultSettings);
         var args = new[] { missing, ties };
 
-        var (_, _, _, filterMissing, includeTies) = ArgumentsParser.ParseArguments(args, defaultSettings);
+        var (_, _, _, filterMissing, includeTies) = ArgParser.ParseArguments(args, defaultSettings);
 
         Assert.Equal(expectedMissing, filterMissing);
         Assert.Equal(expectedTies, includeTies);
