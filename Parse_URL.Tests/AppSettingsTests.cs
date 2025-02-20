@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Parse_URL.Tests;
 
-public class DefaultSettingsTests
+public class AppSettingsTests
 {
     private static IConfiguration GetMockConfig(Dictionary<string, string?> settings)
     {
@@ -19,7 +19,6 @@ public class DefaultSettingsTests
     {
         var settings = new Dictionary<string, string?>
         {
-            { "Defaults:FilePath", "XYZ.log" },
             { "Defaults:NumberOfUrls", "9" },
             { "Defaults:NumberOfIps", "9" },
             { "Defaults:FilterMissingField", "true" },
@@ -31,7 +30,7 @@ public class DefaultSettingsTests
         config.GetSection("Defaults").Bind(defaultSettings);
         defaultSettings.Validate();
 
-        Assert.Equal("XYZ.log", defaultSettings.FilePath);
+        Assert.Equal("./Data/example.log", defaultSettings.FilePath);
         Assert.Equal(9, defaultSettings.NumberOfUrls);
         Assert.Equal(9, defaultSettings.NumberOfIps);
         Assert.True(defaultSettings.FilterMissingField);
@@ -44,13 +43,12 @@ public class DefaultSettingsTests
         var settings = new Dictionary<string, string?>
         {
             { "Defaults:FilePath", null },
-            { "Defaults:NumberOfUrls", "" },
-            { "Defaults:NumberOfIps", "     " },
+            { "Defaults:NumberOfUrls", "-1" },
+            { "Defaults:NumberOfIps", "-9" },
             { "FilterMissingField", "true" },
             { "XYZ:IncludeTies", "false" }
         };
         var config = GetMockConfig(settings);
-        var defaultSettings = new DefaultSettings();
 
         var defaultSettings = new AppSettings();
         config.GetSection("Defaults").Bind(defaultSettings);
