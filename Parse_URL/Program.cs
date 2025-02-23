@@ -9,13 +9,7 @@ var configuration = new ConfigurationBuilder()
     .Build();
 var settings = SettingsRetriever.RetrieveConfigs(configuration);
 var (filePath, topUrls, topIPs, filterMissing, includeTies) = SettingsRetriever.RetrieveInputs(args, settings);
-
-// Parse log file
-var logEntries = LogParser.ParseLogFile(filePath);
-var topUrlsExcludeTies = LogStatistics.GetTopItems(logEntries, log => log.Url, topUrls, filterMissing, includeTies);
-var topIPsIncludeTies = LogStatistics.GetTopItems(logEntries, log => log.IPAddress, topIPs, filterMissing, includeTies);
-
-// Output results
+Console.BackgroundColor = ConsoleColor.DarkGray;
 Console.WriteLine(
     "=========================================\n" +
     "Settings:\n" +
@@ -25,7 +19,18 @@ Console.WriteLine(
     $"  Filter out incomplete entries in responses: {filterMissing}\n" +
     $"  Include ties in responses: {includeTies}\n"
     );
+Console.BackgroundColor = ConsoleColor.Black;
 
+// Parse log file
+Console.BackgroundColor = ConsoleColor.DarkBlue;
+var logEntries = LogParser.ParseLogFile(filePath);
+var topUrlsExcludeTies = LogStatistics.GetTopItems(logEntries, log => log.Url, topUrls, filterMissing, includeTies);
+var topIPsIncludeTies = LogStatistics.GetTopItems(logEntries, log => log.IPAddress, topIPs, filterMissing, includeTies);
+Console.BackgroundColor = ConsoleColor.Black;
+
+// Output results
+Console.BackgroundColor = ConsoleColor.DarkGreen;
+Console.WriteLine("\nResults:");
 Console.WriteLine("=========================================");
 Console.WriteLine($"Total Number of Entries:{logEntries.Count}");
 
@@ -45,3 +50,4 @@ foreach (var ip in topIPsIncludeTies)
 {
     Console.WriteLine($"{ip.Key}: {ip.Value} times");
 }
+Console.BackgroundColor = ConsoleColor.Black;

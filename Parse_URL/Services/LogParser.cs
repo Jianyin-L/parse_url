@@ -13,6 +13,7 @@ public class LogParser
     public static List<LogEntry> ParseLogFile(string filePath)
     {
         var logEntries = new List<LogEntry>();
+        Console.WriteLine("Start parsing log file...");
 
         foreach (var line in File.ReadLines(filePath))
         {
@@ -23,6 +24,7 @@ public class LogParser
             }
         }
 
+        Console.WriteLine("Completed!"); 
         return logEntries;
     }
 
