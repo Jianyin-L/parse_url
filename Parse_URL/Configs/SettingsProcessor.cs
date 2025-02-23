@@ -16,7 +16,7 @@ public static class SettingsProcessor
     {
         if (string.IsNullOrWhiteSpace(value) || !File.Exists(value))
         {
-            Console.WriteLine($"'{value}' is not a valid value or it does not exist.");
+            Console.WriteLine($"'{value}' is not a valid file path or the file does not exist. Use default value instead.");
             return null;
         }
 
@@ -35,7 +35,7 @@ public static class SettingsProcessor
             return (int)Math.Round(Math.Abs(number));
         }
 
-        Console.WriteLine($"'{value}' is not a valid value.");
+        Console.WriteLine($"'{value}' is not a valid value. Use default value instead.");
         return null;
     }
 
@@ -64,7 +64,7 @@ public static class SettingsProcessor
                 return false;
 
             default:
-                Console.WriteLine($"'{value}' is not a valid value.");
+                Console.WriteLine($"'{value}' is not a valid value. Use default value instead.");
                 return null;
         }
     }

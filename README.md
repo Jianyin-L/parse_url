@@ -1,15 +1,15 @@
 ﻿# Log Analyser - C# Console App :pager:
 
-TODO update this table of content once done
 ## Table of Contents
 - [Overview](#overview)
 - [Objectives](#objectives)
 - [Techstack](#techstack)
 - [Project Structure](#project-structure)
-- [Features](#features)
+- [Assumptions](#assumptions)
 - [Setup](#setup)
+- [Features](#features)
 - [Expected Output](#expected-output)
-- [Future Improvements](#future-improvements)
+- [Demo](#demo)
 - [Reference](#reference)
 
 ## Overview :page_with_curl:
@@ -43,55 +43,27 @@ The project structure is as follows:
 ```bash
 .
 │── Parse_URL
+│   │── Configs
 │   │── Data
 │   │── Models
-│   │── Utilities
+│   │── Services
 │   └── Program.cs
 │── Parse_URL.Tests
 └── Parse_URL.sln
 ```
 
-- `Parse_URL` folder: Contains the main application code.
-	- `Data`: Contains the sample log file `example.log`.
-	- `Models`: Contains the data models used in the application.
-	- `Utilities`: Contains functions to parse log entries and calculate statistics.
-	- `Program.cs`: The entry point of the application.
-- `Parse_URL.Tests` folder: Contains the unit tests for the application.
-- `Parse_URL.sln`: The solution file for the project.
+- `Parse_URL` folder
+    - `Configs`: contains logics to load configurations and read user arguments.
+	- `Data`: contains the sample log file `example.log`.
+	- `Models`: contains the data models used in the application.
+	- `Services`: contains logics to parse log entries and calculate statistics.
+	- `Program.cs`: the entry point of the application.
+- `Parse_URL.Tests` folder: contains unit tests for the application.
+- `Parse_URL.sln`: the solution file for the project.
 
 ## Assumptions :bulb:
-- The log file is in the Common Log Format (CLF) or Combined Log Format and they are well-formed 2xx success logs. 
-
-## Features :sparkles:
-The `Program.cs` file is the entry point of the application and you can customise the application's behaviour by modifying this file in the following ways: 
-
-### 1. Read a Different Log File
-The application reads the log file `./Data/example.log`. This can be updated to any other log file as long as it follows the log structure mentioned in the [Reference](#reference) section.
-```csharp
-var filePath = "path/to/your/logfile.log";  // Update this path to your log file
-```
-### 2. Customise the Number of Items to Return
-The application is set to return the top 3 most visited URLs and the top 3 most active IP addresses, which the number can be adjusted in the `Program.cs` as follows:
-```csharp
-var topUrls = 2;
-var topIPs = 2;
-```
-
-### 3. How to Handle Ties
-The application does not include ties when displaying the top URLs and IPs by default.  
-To include ties, set the following variable to `true` in the `Program.cs`:
-```csharp
-var includeTies = true;
-```
-
-### 4. How to Handle Missing Required Fields
-The application does not filter out entries if the entry is missing a required field. For example, if the log entry does not contain a URL, it will still be considered as a valid entry when calculating the top URLs.  
-To filter out such entries, set the following variable to `true`:
-```csharp
-var filterMissing = true;
-```
-
-*Excited to try it out? Follow the following [instructions](#setup).*
+- The log file is in the Common Log Format (CLF) and it only contains well-formed 2xx success logs. 
+- When returning the result, `http://example.net/faq/` and `/faq/` are considered as two different URLs.
 
 ## Setup :wrench:
 ### Prerequisites
@@ -102,10 +74,11 @@ var filterMissing = true;
     ```bash
     git clone https://github.com/Jianyin-L/parse_url.git
     ```
-2. Navigate to the project directory.  
-    A sample data file is located in the `./Data` folder. 
-    
-    TODO: move the file around so it is not nested Parse_URL
+2. From the root folder, navigate to the project directory `parse_url`.
+	```bash
+    cd Parse_URL/Parse_URL
+    ```
+    From there, you should see a folder named `./Data` which contains the sample log file `example.log`.
 
 3. Build and run the project in Command Line. 
     ```bash
@@ -114,17 +87,53 @@ var filterMissing = true;
     ```
     The output will be displayed in the console.  
 
-## Expected Output :chart_with_upwards_trend:
-TODO: Update the output once the project is finalised   
-The output without any customisation will look like this:
-```
-Settings:
-  File Path: ./Data/example.log
-  Top URLs: 3
-  Top IPs: 3
-  Filter out entries if lacking requested field: False
-  Include ties: False
+4. To run the tests, navigate to the `Parse_URL.Tests` folder from the root folder and run:
+    ```bash
+    cd Parse_URL/Parse_URL.Tests
+    dotnet test
+    ```
 
+## Features :sparkles: 
+
+### 1. Read a Different Log File
+The application by default reads log file `./Data/example.log`.  
+To change it, pass the file path as an argument when running the application.
+```bash
+dotnet run file=test1.log
+```
+This can be any log file as long as it follows the log structure mentioned in the [Reference](#reference) section.
+
+### 2. Customise the Number of Items to Return
+The application is set to return the top 3 most visited URLs and the top 3 most active IP addresses.  
+To change this behaviour and return a different number of items, follow the example below:
+```bash
+dotnet run urls=5 ips=5
+```
+This will return the top 5 most visited URLs and the top 5 most active IP addresses.
+
+### 3. Include Ties in the Results
+The application does not include ties when displaying the top URLs and IPs by default.  
+To include ties, pass the following when calling the application:
+```csharp
+dotnet run includeties=true
+```
+
+### 4. Filter Out Missing Required Fields
+The application does not filter out entries if the entry is missing a required field. For example, if the log entry does not contain a URL, it will still be considered as a valid entry when calculating the top URLs.  
+To filter out such entries, do the following:
+```csharp
+dotnet run filtermissing=true
+```
+
+You are more than welcome to combine these options when running the application. For example:
+```bash
+dotnet run file=test1.log urls=5 filtermissing=true
+```
+
+## Expected Output :chart_with_upwards_trend:
+The expected output when running the application is as follows:
+```
+Results:
 =========================================
 Total Number of Entries:23
 
@@ -144,24 +153,20 @@ Top 3 Most Active IPs:
 50.112.00.11: 3 times
 ```
 which means: 
-- The log file contains 23 entries.
-- There are 11 unique IP addresses. 
-- The top 3 most visited URLs, excluding ties, are 
-	- `/docs/manage-websites/`: 2 times
-	- `/intranet-analytics/`: 1 time
-	- `http://example.net/faq/`: 1 time
-- The top 3 most visited URLs, including  ties, are
-    - `168.41.191.40`: 4 times
-    - `177.71.128.21`: 3 times
-    - *and more*...
+- There are 23 entries in the log file `example.log`.
+- There are 11 unique IP addresses.
+- The top 3 most visited URLs are `/docs/manage-websites/`, `/intranet-analytics/`, and `http://example.net/faq/`.
+- The top 3 most active IPs are `168.41.191.40`, `177.71.128.21`, and `50.112.00.11`.
 
-## Future Improvements :rocket:
-### Command Line Arguments
-- Allow the user to specify the file path as a command-line argument.
-- Support other arguments, such as specifying the number of top URLs and IPs to display, whether to include ties, etc. 
+## Demo :rocket:
+### Run the application with default settings
+![parse_url_default](Parse_URL/Docs/parse_url_default.gif)
 
-### Data Handling
-- Better handle various data structures, such as handling IP addresses in IPv6 format, handling different date formats, etc.
+### Run the application with custom settings
+![parse_url_custom](Parse_URL/Docs/parse_url_custom.gif)
+
+### Run tests
+![parse_url_tests](Parse_URL/Docs/parse_url_tests.gif)
 
 ## Reference :books:
 ### Log structure

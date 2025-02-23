@@ -34,6 +34,8 @@ public static class SettingsRetriever
         bool? filterMissingField = null;
         bool? includeTies = null;
 
+        Console.WriteLine("Start parsing user inputs...");
+
         foreach (var arg in args)
         {
             var parts = arg.Split('=', 2, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
@@ -45,18 +47,23 @@ public static class SettingsRetriever
             switch (key)
             {
                 case "file":
+                    Console.WriteLine($"Parsing '{key}' file path...");
                     path = SettingsProcessor.ParseFilePath(value);
                     break;
                 case "urls":
+                    Console.WriteLine($"Parsing '{key}' number of URLs to return...");
                     numberOfUrls = SettingsProcessor.ParseInt(value);
                     break;
                 case "ips":
+                    Console.WriteLine($"Parsing '{key}' number of IPs to return...");
                     numberOfIps = SettingsProcessor.ParseInt(value);
                     break;
                 case "filtermissing":
+                    Console.WriteLine($"Parsing '{key}' flag to determine if missing fields should be filtered...");
                     filterMissingField = SettingsProcessor.ParseBool(value);
                     break;
                 case "includeties":
+                    Console.WriteLine($"Parsing '{key}' flag to determine if ties should be included...");
                     includeTies = SettingsProcessor.ParseBool(value);
                     break;
                 default:
@@ -65,6 +72,7 @@ public static class SettingsRetriever
             }
         }
 
+        Console.WriteLine("Parsing user inputs is completed!");
         return (path ?? defaults.FilePath,
             numberOfUrls ?? defaults.NumberOfUrls,
             numberOfIps ?? defaults.NumberOfIps,
