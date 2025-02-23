@@ -5,7 +5,7 @@ namespace Parse_URL.Tests;
 
 public class DefaultSettingsTests
 {
-    private static IConfiguration GetMockConfig(Dictionary<string, string?> settings)
+    private static IConfiguration GetConfig(Dictionary<string, string?> settings)
     {
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(settings)
@@ -15,49 +15,68 @@ public class DefaultSettingsTests
     }
 
     [Fact]
-    public void DefaultSettings_ShouldLoadFromConfig_WhenValidConfigIsProvided()
+    public void DefaultSettings_ShouldReturnConfig_WhenValidConfigIsProvided()
     {
-        var settings = new Dictionary<string, string?>
+        var defaults = new Dictionary<string, string?>
         {
+            { "Defaults:FilePath", "./Data/example.log" },
             { "Defaults:NumberOfUrls", "9" },
             { "Defaults:NumberOfIps", "9" },
             { "Defaults:FilterMissingField", "true" },
             { "Defaults:IncludeTies", "false" }
         };
-        var config = GetMockConfig(settings);
-        var defaultSettings = new AppSettings();
+        var config = GetConfig(defaults);
+        
+        var settings = DefaultSettings.LoadFromConfig(config);
 
-        config.GetSection("Defaults").Bind(defaultSettings);
-        defaultSettings.Validate();
-
-        Assert.Equal("./Data/example.log", defaultSettings.FilePath);   // TODO: Not sure here
-        Assert.Equal(9, defaultSettings.NumberOfUrls);
-        Assert.Equal(9, defaultSettings.NumberOfIps);
-        Assert.True(defaultSettings.FilterMissingField);
-        Assert.False(defaultSettings.IncludeTies);
+        Assert.Contains("example.log", settings.FilePath);
+        Assert.Equal(9, settings.NumberOfUrls);
+        Assert.Equal(9, settings.NumberOfIps);
+        Assert.True(settings.FilterMissingField);
+        Assert.False(settings.IncludeTies);
     }
 
     [Fact]
     public void DefaultSettings_ShouldFallbackToDefaults_WhenInvalidConfigIsProvided()
     {
-        var settings = new Dictionary<string, string?>
+        var defaults = new Dictionary<string, string?>
         {
             { "Defaults:FilePath", null },
-            { "Defaults:NumberOfUrls", "   " }, // Failed to convert configuration value at 'Defaults:NumberOfUrls' to type 'System.Int32'.
+            { "Defaults:NumberOfUrls", "   " },
             { "Defaults:NumberOfIps", "" },
-            { "FilterMissingField", "t" },
-            { "XYZ:IncludeTies", "0" }
+            { "Defaults:FilterMissingField", "abc" },
+            { "Defaults:IncludeTies", "9" }
         };
-        var config = GetMockConfig(settings);
+        var config = GetConfig(defaults);
 
-        var defaultSettings = new AppSettings();
-        config.GetSection("Defaults").Bind(defaultSettings);
-        defaultSettings.Validate();
+        var settings = DefaultSettings.LoadFromConfig(config);
 
-        Assert.Equal("./Data/example.log", defaultSettings.FilePath);
-        Assert.Equal(99, defaultSettings.NumberOfUrls);
-        Assert.Equal(99, defaultSettings.NumberOfIps);
-        Assert.False(defaultSettings.FilterMissingField);
-        Assert.False(defaultSettings.IncludeTies);
+        Assert.Contains("example.log", settings.FilePath);
+        Assert.Equal(99, settings.NumberOfUrls);    // TODO: Hardcode the value here may not be good. Use default.NumberOfUrls? 
+        Assert.Equal(99, settings.NumberOfIps);
+        Assert.False(settings.FilterMissingField);
+        Assert.False(settings.IncludeTies);
+    }
+
+    [Fact]
+    public void DefaultSettings_ShouldReturnDefaults_WhenInvalidConfigArgumentIsProvided()
+    {
+        var defaults = new Dictionary<string, string?>
+        {
+            { "FilePath", "./Data/example.log" },
+            { "Defaults:Urls", "3" },
+            { "XYZ:NumberOfIps", "3" },
+            { "Defaults:ABC:FilterMissingField", "true" },
+            { "Defaults", "false" }
+        };
+        var config = GetConfig(defaults);
+
+        var settings = DefaultSettings.LoadFromConfig(config);
+
+        Assert.Contains("example.log", settings.FilePath);
+        Assert.Equal(99, settings.NumberOfUrls);
+        Assert.Equal(99, settings.NumberOfIps);
+        Assert.False(settings.FilterMissingField);
+        Assert.False(settings.IncludeTies);
     }
 }
