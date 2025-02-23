@@ -1,4 +1,4 @@
-﻿using Parse_URL.Utilities;
+﻿using Parse_URL.Configs;
 using Microsoft.Extensions.Configuration;
 
 namespace Parse_URL.Tests;

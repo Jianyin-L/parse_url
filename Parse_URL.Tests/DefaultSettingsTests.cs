@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Parse_URL.Utilities;
+using Parse_URL.Configs;
 
 namespace Parse_URL.Tests;
 

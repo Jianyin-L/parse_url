@@ -1,16 +1,15 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Parse_URL.Configs;
 
-namespace Parse_URL.Utilities;
+namespace Parse_URL.Configs;
 
 public static class SettingsRetriever
 {
     public static (string FilePath, int NumberOfUrls, int NumberOfIps, bool FilterMissingField, bool IncludeTies) RetrieveFromConfig(IConfiguration config) => (
-        SettingsProcessor.ParseFilePath(config.GetValue<string>($"{DefaultSettings.SectionName}:{nameof(DefaultSettings.FilePath)}", DefaultSettings.FilePath)) ?? DefaultSettings.FilePath,
-        SettingsProcessor.ParseInt(config.GetValue<string>($"{DefaultSettings.SectionName}:{nameof(DefaultSettings.NumberOfUrls)}", DefaultSettings.NumberOfUrls.ToString())) ?? DefaultSettings.NumberOfUrls,
-        SettingsProcessor.ParseInt(config.GetValue<string>($"{DefaultSettings.SectionName}:{nameof(DefaultSettings.NumberOfIps)}", DefaultSettings.NumberOfIps.ToString())) ?? DefaultSettings.NumberOfIps,
-        SettingsProcessor.ParseBool(config.GetValue<string>($"{DefaultSettings.SectionName}:{nameof(DefaultSettings.FilterMissingField)}", DefaultSettings.FilterMissingField.ToString())) ?? DefaultSettings.FilterMissingField,
-        SettingsProcessor.ParseBool(config.GetValue<string>($"{DefaultSettings.SectionName}:{nameof(DefaultSettings.IncludeTies)}", DefaultSettings.IncludeTies.ToString())) ?? DefaultSettings.IncludeTies
+        SettingsProcessor.ParseFilePath(config.GetValue($"{DefaultSettings.SectionName}:{nameof(DefaultSettings.FilePath)}", DefaultSettings.FilePath)) ?? DefaultSettings.FilePath,
+        SettingsProcessor.ParseInt(config.GetValue($"{DefaultSettings.SectionName}:{nameof(DefaultSettings.NumberOfUrls)}", DefaultSettings.NumberOfUrls.ToString())) ?? DefaultSettings.NumberOfUrls,
+        SettingsProcessor.ParseInt(config.GetValue($"{DefaultSettings.SectionName}:{nameof(DefaultSettings.NumberOfIps)}", DefaultSettings.NumberOfIps.ToString())) ?? DefaultSettings.NumberOfIps,
+        SettingsProcessor.ParseBool(config.GetValue($"{DefaultSettings.SectionName}:{nameof(DefaultSettings.FilterMissingField)}", DefaultSettings.FilterMissingField.ToString())) ?? DefaultSettings.FilterMissingField,
+        SettingsProcessor.ParseBool(config.GetValue($"{DefaultSettings.SectionName}:{nameof(DefaultSettings.IncludeTies)}", DefaultSettings.IncludeTies.ToString())) ?? DefaultSettings.IncludeTies
     );
 
     public static (string FilePath, int NumberOfUrls, int NumberOfIps, bool FilterMissingField, bool IncludeTies) RetrieveArguments(string[] args, (string FilePath, int NumberOfUrls, int NumberOfIps, bool FilterMissingField, bool IncludeTies) defaults)
@@ -52,10 +51,10 @@ public static class SettingsRetriever
             }
         }
 
-        return (path ?? defaults.FilePath, 
-            numberOfUrls ?? defaults.NumberOfUrls, 
+        return (path ?? defaults.FilePath,
+            numberOfUrls ?? defaults.NumberOfUrls,
             numberOfIps ?? defaults.NumberOfIps,
-            filterMissingField ?? defaults.FilterMissingField, 
+            filterMissingField ?? defaults.FilterMissingField,
             includeTies ?? defaults.IncludeTies);
     }
 

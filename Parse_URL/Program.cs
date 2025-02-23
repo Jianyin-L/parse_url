@@ -1,5 +1,5 @@
 ﻿using Parse_URL.Services;
-using Parse_URL.Utilities;
+using Parse_URL.Configs;
 using Microsoft.Extensions.Configuration;
 
 // Config

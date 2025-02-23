@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace Parse_URL.Utilities;
+namespace Parse_URL.Configs;
 
 public static class SettingsProcessor
 {
@@ -17,7 +17,7 @@ public static class SettingsProcessor
 
     public static int? ParseInt(string value)
     {
-        if (!string.Equals(value, "0") && (double.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out var number)))
+        if (!string.Equals(value, "0") && double.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out var number))
         {
             return (int)Math.Round(Math.Abs(number));
         }
