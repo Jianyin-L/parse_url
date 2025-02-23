@@ -4,12 +4,23 @@ using System.Text.RegularExpressions;
 
 namespace Parse_URL.Services;
 
+/// <summary>
+/// The LogParser class is responsible for parsing log files and extracting log entries.
+/// </summary>
 public class LogParser
 {
+    /// <summary>
+    /// Regular expression pattern used to match log entries in a log file.
+    /// </summary>
     private static readonly Regex LogPattern = new Regex(
         @"(?<ip>-|\d+\.\d+\.\d+\.\d+)\s+-\s+(?<user>\S+)\s+\[(?<timestamp>-|[^\]]+)]\s+""(?<method>-|[^\s]+)\s+(?<url>-|[^\s]+|).*""\s+(?<status>-|\d{3})\s+(?<size>-|\d+)\s+"".*""\s+""(?<useragent>.*)""",
         RegexOptions.Compiled);
 
+    /// <summary>
+    /// Parses a log file and returns a list of log entries.
+    /// </summary>
+    /// <param name="filePath">The path to the log file.</param>
+    /// <returns>A list of log entries.</returns>
     public static List<LogEntry> ParseLogFile(string filePath)
     {
         var logEntries = new List<LogEntry>();
@@ -24,10 +35,15 @@ public class LogParser
             }
         }
 
-        Console.WriteLine("Completed!"); 
+        Console.WriteLine("Completed!");
         return logEntries;
     }
 
+    /// <summary>
+    /// Parses a single log line and returns a log entry object.
+    /// </summary>
+    /// <param name="entry">The log line to parse.</param>
+    /// <returns>A log entry object if the line is successfully parsed, otherwise null.</returns>
     private static LogEntry? ParseLogLine(string entry)
     {
         var match = LogPattern.Match(entry);

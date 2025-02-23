@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 // Retrieve config and user inputs
 var configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true) // TODO: maybe optional is true here
+    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
     .Build();
 var settings = SettingsRetriever.RetrieveConfigs(configuration);
 var (filePath, topUrls, topIPs, filterMissing, includeTies) = SettingsRetriever.RetrieveInputs(args, settings);

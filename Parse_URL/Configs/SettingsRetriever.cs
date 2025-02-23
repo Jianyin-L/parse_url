@@ -2,8 +2,16 @@
 
 namespace Parse_URL.Configs;
 
+/// <summary>
+/// A static class that provides methods to retrieve settings configurations.
+/// </summary>
 public static class SettingsRetriever
 {
+    /// <summary>
+    /// Retrieves the settings configurations from the provided IConfiguration object.
+    /// </summary>
+    /// <param name="config">The IConfiguration object containing the settings configurations.</param>
+    /// <returns>A tuple containing the retrieved settings configurations.</returns>
     public static (string FilePath, int NumberOfUrls, int NumberOfIps, bool FilterMissingField, bool IncludeTies) RetrieveConfigs(IConfiguration config) => (
         SettingsProcessor.ParseFilePath(config.GetValue($"{DefaultSettings.SectionName}:{nameof(DefaultSettings.FilePath)}", DefaultSettings.FilePath)) ?? DefaultSettings.FilePath,
         SettingsProcessor.ParseInt(config.GetValue($"{DefaultSettings.SectionName}:{nameof(DefaultSettings.NumberOfUrls)}", DefaultSettings.NumberOfUrls.ToString())) ?? DefaultSettings.NumberOfUrls,
@@ -12,6 +20,12 @@ public static class SettingsRetriever
         SettingsProcessor.ParseBool(config.GetValue($"{DefaultSettings.SectionName}:{nameof(DefaultSettings.IncludeTies)}", DefaultSettings.IncludeTies.ToString())) ?? DefaultSettings.IncludeTies
     );
 
+    /// <summary>
+    /// Retrieves the input settings from the command line arguments and applies default values if necessary.
+    /// </summary>
+    /// <param name="args">The command line arguments.</param>
+    /// <param name="defaults">The default values for the settings.</param>
+    /// <returns>A tuple containing the retrieved input settings.</returns>
     public static (string FilePath, int NumberOfUrls, int NumberOfIps, bool FilterMissingField, bool IncludeTies) RetrieveInputs(string[] args, (string FilePath, int NumberOfUrls, int NumberOfIps, bool FilterMissingField, bool IncludeTies) defaults)
     {
         string? path = null;
@@ -57,5 +71,4 @@ public static class SettingsRetriever
             filterMissingField ?? defaults.FilterMissingField,
             includeTies ?? defaults.IncludeTies);
     }
-
 }

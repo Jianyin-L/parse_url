@@ -170,7 +170,7 @@ public class LogParserTests
         Assert.Empty(result);
     }
 
-    private string CreateTestLogFile(params string[] logEntries)
+    private static string CreateTestLogFile(params string[] logEntries)
     {
         var logFilePath = Path.GetTempFileName();
         File.WriteAllLines(logFilePath, logEntries);
