@@ -160,7 +160,7 @@ which means:
 
 ## Demo :rocket:
 ### Run the application with default settings
-![parse_url_default](Parse_URL/Docs/parse_url_default.gif)
+![parse_url_default](Parse_URL/Docs/Parse_url_default.gif)
 
 ### Run the application with custom settings
 ![parse_url_custom](Parse_URL/Docs/parse_url_custom.gif)
