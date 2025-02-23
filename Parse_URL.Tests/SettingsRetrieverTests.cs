@@ -4,9 +4,9 @@ using Microsoft.Extensions.Configuration;
 
 namespace Parse_URL.Tests;
 
-public class ArgumentsParserTests
+public class SettingsRetrieverTests
 {
-    private static IConfiguration GetMockConfig()
+    private static IConfiguration GetConfig()
     {
         var configValues = new Dictionary<string, string?>
         {
@@ -25,14 +25,13 @@ public class ArgumentsParserTests
     }
 
     [Fact]
-    public void ParseArguments_ShouldReturnDefaultValues_WhenNoArgumentsProvided()
+    public void SettingsRetriever_ShouldReturnDefaultValues_WhenNoArgumentsProvided()
     {
-        var config = GetMockConfig();
-        var defaultSettings = new AppSettings();
-        config.GetSection("Defaults").Bind(defaultSettings);
+        var config = GetConfig();
+        var settings = DefaultSettings.LoadFromConfig(config);
 
         var args = Array.Empty<string>();
-        var (filePath, urls, ips, filterMissing, includeTies) = ArgParser.ParseArguments(args, defaultSettings);
+        var (filePath, urls, ips, filterMissing, includeTies) = SettingsRetriever.RetrieveArguments(args, settings);
 
         Assert.Contains("example.log", filePath);
         Assert.Equal(3, urls);
@@ -42,16 +41,15 @@ public class ArgumentsParserTests
     }
 
     [Fact]
-    public void ParseArguments_ShouldReturnDefaultValues_WhenInvalidArgumentsProvided()
+    public void SettingsRetriever_ShouldReturnDefaultValues_WhenInvalidArgumentsProvided()
     {
-        var config = GetMockConfig();
-        var defaultSettings = new AppSettings();
-        config.GetSection("Defaults").Bind(defaultSettings);
+        var config = GetConfig();
+        var settings = DefaultSettings.LoadFromConfig(config);
         var args = new[] {
             "XYZ=abcdefg.log ABC=10 Random=10 YYY=true ZZZ=true",
         };
 
-        var (filePath, urls, ips, filterMissing, includeTies) = ArgParser.ParseArguments(args, defaultSettings);
+        var (filePath, urls, ips, filterMissing, includeTies) = SettingsRetriever.RetrieveArguments(args, settings);
 
         Assert.Contains("example.log", filePath);
         Assert.Equal(3, urls);
@@ -63,14 +61,13 @@ public class ArgumentsParserTests
     [Theory]
     [InlineData("file=abcdefg.log")]
     [InlineData("file= ")]
-    public void ParseArguments_ShouldReturnDefaultFilePath_WhenInValidFileIsGiven(string file)
+    public void SettingsRetriever_ShouldReturnDefaultFilePath_WhenInValidFileIsGiven(string file)
     {
-        var config = GetMockConfig();
-        var defaultSettings = new AppSettings();
-        config.GetSection("Defaults").Bind(defaultSettings);
+        var config = GetConfig();
+        var settings = DefaultSettings.LoadFromConfig(config);
         var args = new[] { file };
 
-        var (filePath, _, _, _, _) = ArgParser.ParseArguments(args, defaultSettings);
+        var (filePath, _, _, _, _) = SettingsRetriever.RetrieveArguments(args, settings);
 
         Assert.Contains("example.log", filePath);
     }
@@ -81,14 +78,13 @@ public class ArgumentsParserTests
     [InlineData("urls=-5", 5)]
     [InlineData("urls=1.2", 1)]
     [InlineData("urls=1.6", 2)]
-    public void ParseArguments_ShouldParseNumberOfUrls_WhenValidIntegerIsGiven(string input, int expected)
+    public void SettingsRetriever_ShouldParseNumberOfUrls_WhenValidIntegerIsGiven(string input, int expected)
     {
-        var config = GetMockConfig();
-        var defaultSettings = new AppSettings();
-        config.GetSection("Defaults").Bind(defaultSettings);
+        var config = GetConfig();
+        var settings = DefaultSettings.LoadFromConfig(config);
         var args = new string[] { input };
 
-        var (_, urls, _, _, _) = ArgParser.ParseArguments(args, defaultSettings);
+        var (_, urls, _, _, _) = SettingsRetriever.RetrieveArguments(args, settings);
 
         Assert.Equal(expected, urls);
     }
@@ -99,14 +95,13 @@ public class ArgumentsParserTests
     [InlineData("urls= ")]
     [InlineData("urls==")]
     [InlineData("urls=...")]
-    public void ParseArguments_ShouldReturnDefaultUrls_WhenInvalidValuesIsGiven(string input)
+    public void SettingsRetriever_ShouldReturnDefaultUrls_WhenInvalidValuesIsGiven(string input)
     {
-        var config = GetMockConfig();
-        var defaultSettings = new AppSettings();
-        config.GetSection("Defaults").Bind(defaultSettings);
+        var config = GetConfig();
+        var settings = DefaultSettings.LoadFromConfig(config);
         var args = new string[] { input };
 
-        var (_, urls, _, _, _) = ArgParser.ParseArguments(args, defaultSettings);
+        var (_, urls, _, _, _) = SettingsRetriever.RetrieveArguments(args, settings);
 
         Assert.Equal(3, urls);
     }
@@ -118,14 +113,13 @@ public class ArgumentsParserTests
     [InlineData("ips=1.2", 1)]
     [InlineData("ips=1.6", 2)]
     [InlineData("ips=10 ", 10)]
-    public void ParseArguments_ShouldParseNumberOfIps_WhenValidIntegerIsGiven(string input, int expected)
+    public void SettingsRetriever_ShouldParseNumberOfIps_WhenValidIntegerIsGiven(string input, int expected)
     {
-        var config = GetMockConfig();
-        var defaultSettings = new AppSettings();
-        config.GetSection("Defaults").Bind(defaultSettings);
+        var config = GetConfig();
+        var settings = DefaultSettings.LoadFromConfig(config);
         var args = new string[] { input };
 
-        var (_, _, ips, _, _) = ArgParser.ParseArguments(args, defaultSettings);
+        var (_, _, ips, _, _) = SettingsRetriever.RetrieveArguments(args, settings);
 
         Assert.Equal(expected, ips);
     }
@@ -136,14 +130,13 @@ public class ArgumentsParserTests
     [InlineData("urls= ")]
     [InlineData("urls==")]
     [InlineData("urls=...")]
-    public void ParseArguments_ShouldReturnDefaultIps_WhenInvalidValuesIsGiven(string input)
+    public void SettingsRetriever_ShouldReturnDefaultIps_WhenInvalidValuesIsGiven(string input)
     {
-        var config = GetMockConfig();
-        var defaultSettings = new AppSettings();
-        config.GetSection("Defaults").Bind(defaultSettings);
+        var config = GetConfig();
+        var settings = DefaultSettings.LoadFromConfig(config);
         var args = new[] { input };
 
-        var (_, _, ips, _, _) = ArgParser.ParseArguments(args, defaultSettings);
+        var (_, _, ips, _, _) = SettingsRetriever.RetrieveArguments(args, settings);
 
         Assert.Equal(3, ips);
     }
@@ -155,14 +148,13 @@ public class ArgumentsParserTests
     [InlineData("filtermissing=0", "includeties=1", false, true)]
     [InlineData("filtermissing=no", "includeties=yes", false, true)]
     [InlineData("filtermissing=N", "includeties=y", false, true)]
-    public void ParseArguments_ShouldParseBooleanFlags_WhenValidValueIsGiven(string missing, string ties, bool expectedMissing, bool expectedTies)
+    public void SettingsRetriever_ShouldParseBooleanFlags_WhenValidValueIsGiven(string missing, string ties, bool expectedMissing, bool expectedTies)
     {
-        var config = GetMockConfig();
-        var defaultSettings = new AppSettings();
-        config.GetSection("Defaults").Bind(defaultSettings);
+        var config = GetConfig();
+        var settings = DefaultSettings.LoadFromConfig(config);
         var args = new[] { missing, ties };
 
-        var (_, _, _, filterMissing, includeTies) = ArgParser.ParseArguments(args, defaultSettings);
+        var (_, _, _, filterMissing, includeTies) = SettingsRetriever.RetrieveArguments(args, settings);
 
         Assert.Equal(expectedMissing, filterMissing);
         Assert.Equal(expectedTies, includeTies);
@@ -171,14 +163,13 @@ public class ArgumentsParserTests
     [Theory]
     [InlineData("filtermissing=abc", "includeties=123", false, false)]
     [InlineData("filtermissing=  ", "includeties=!!", false, false)]
-    public void ParseArguments_ShouldReturnDefaultBooleanFlags_WhenInvalidValueIsGiven(string missing, string ties, bool expectedMissing, bool expectedTies)
+    public void SettingsRetriever_ShouldReturnDefaultBooleanFlags_WhenInvalidValueIsGiven(string missing, string ties, bool expectedMissing, bool expectedTies)
     {
-        var config = GetMockConfig();
-        var defaultSettings = new AppSettings();
-        config.GetSection("Defaults").Bind(defaultSettings);
+        var config = GetConfig();
+        var settings = DefaultSettings.LoadFromConfig(config);
         var args = new[] { missing, ties };
 
-        var (_, _, _, filterMissing, includeTies) = ArgParser.ParseArguments(args, defaultSettings);
+        var (_, _, _, filterMissing, includeTies) = SettingsRetriever.RetrieveArguments(args, settings);
 
         Assert.Equal(expectedMissing, filterMissing);
         Assert.Equal(expectedTies, includeTies);
