@@ -91,7 +91,7 @@ public class SettingsRetrieverTests
     {
         var settings = GetDefaultConfigValues();
         var args = new[] {
-            "XYZ=abcdefg.log ABC=10 Random=10 YYY=true ZZZ=true",
+            "XYZ=abcdefg.log urls=abc ips~10 filtermissing==true ZZZ=",
         };
 
         var (filePath, urls, ips, filterMissing, includeTies) = SettingsRetriever.RetrieveInputs(args, settings);
@@ -166,11 +166,11 @@ public class SettingsRetrieverTests
     }
 
     [Theory]
-    [InlineData("urls=abc")]
-    [InlineData("urls=null")]
-    [InlineData("urls= ")]
-    [InlineData("urls==")]
-    [InlineData("urls=...")]
+    [InlineData("ips=abc")]
+    [InlineData("ips=null")]
+    [InlineData("ips= ")]
+    [InlineData("ips==")]
+    [InlineData("ips=...")]
     public void RetrieveInputs_ShouldReturnDefaultIps_WhenInvalidValuesIsGiven(string input)
     {
         var settings = GetDefaultConfigValues();
