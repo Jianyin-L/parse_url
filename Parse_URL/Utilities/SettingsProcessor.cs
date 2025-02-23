@@ -2,7 +2,7 @@
 
 namespace Parse_URL.Utilities;
 
-public static class ArgValidationHelper
+public static class SettingsProcessor
 {
     public static string ParseFilePath(string value, string defaultValue)
     {
@@ -26,26 +26,26 @@ public static class ArgValidationHelper
 
     public static bool ParseBool(string value, bool defaultValue)
     {
-        if (IsValidBool(value))
+        value = value.Trim().ToLower();
+        switch (value)
         {
-            value = value.Trim().ToLower();
-            return value switch
-            {
-                "true" or "t" or "yes" or "y" or "1" => true,
-                "false" or "f" or "no" or "n" or "0" => false,
-                _ => defaultValue
-            };
-        }
-        else
-        {
-            Console.WriteLine($"'{value}' is not a valid value. Defaulting to {defaultValue}.");
-            return defaultValue;
+            case "true":
+            case "t":
+            case "yes":
+            case "y":
+            case "1":
+                return true;
+
+            case "false":
+            case "f":
+            case "no":
+            case "n":
+            case "0":
+                return false;
+
+            default:
+                Console.WriteLine($"'{value}' is not a valid value. Defaulting to {defaultValue}.");
+                return defaultValue;
         }
     }
-
-    private static bool IsValidBool(string value) => value.Trim().ToLower() switch
-    {
-        "true" or "t" or "yes" or "y" or "1" or "false" or "f" or "no" or "n" or "0" => true,
-        _ => false,
-    };
 }

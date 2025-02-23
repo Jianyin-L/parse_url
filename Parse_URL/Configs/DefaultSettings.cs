@@ -38,24 +38,13 @@ public class DefaultSettings
         //settings.FilterMissingField = config.GetValue<bool>($"{SectionName}:{nameof(FilterMissingField)}", DefaultFilterMissingField);
         ////IncludeTies = config.GetValue<bool>($"{SectionName}:{nameof(IncludeTies)}", DefaultIncludeTies);
 
-        settings.FilePath = ArgValidationHelper.ParseFilePath(config.GetValue<string>($"{SectionName}:{nameof(FilePath)}", DefaultFilePath), DefaultFilePath);
-        settings.NumberOfUrls = ArgValidationHelper.ParseInt(config.GetValue<string>($"{SectionName}:{nameof(NumberOfUrls)}", DefaultNumberOfUrls.ToString()), DefaultNumberOfUrls);
-        settings.NumberOfIps = ArgValidationHelper.ParseInt(config.GetValue<string>($"{SectionName}:{nameof(NumberOfIps)}", DefaultNumberOfIps.ToString()), DefaultNumberOfIps);
-        settings.FilterMissingField = ArgValidationHelper.ParseBool(config.GetValue<string>($"{SectionName}:{nameof(FilterMissingField)}", DefaultFilterMissingField.ToString()), DefaultFilterMissingField);
-        settings.IncludeTies = ArgValidationHelper.ParseBool(config.GetValue<string>($"{SectionName}:{nameof(IncludeTies)}", DefaultIncludeTies.ToString()), DefaultIncludeTies);
+        settings.FilePath = SettingsProcessor.ParseFilePath(config.GetValue<string>($"{SectionName}:{nameof(FilePath)}", DefaultFilePath), DefaultFilePath);
+        settings.NumberOfUrls = SettingsProcessor.ParseInt(config.GetValue<string>($"{SectionName}:{nameof(NumberOfUrls)}", DefaultNumberOfUrls.ToString()), DefaultNumberOfUrls);
+        settings.NumberOfIps = SettingsProcessor.ParseInt(config.GetValue<string>($"{SectionName}:{nameof(NumberOfIps)}", DefaultNumberOfIps.ToString()), DefaultNumberOfIps);
+        settings.FilterMissingField = SettingsProcessor.ParseBool(config.GetValue<string>($"{SectionName}:{nameof(FilterMissingField)}", DefaultFilterMissingField.ToString()), DefaultFilterMissingField);
+        settings.IncludeTies = SettingsProcessor.ParseBool(config.GetValue<string>($"{SectionName}:{nameof(IncludeTies)}", DefaultIncludeTies.ToString()), DefaultIncludeTies);
 
         return settings;
 
-    }
-
-    public DefaultSettings Validate()
-    {
-        FilePath = ArgValidationHelper.ParseFilePath(FilePath, DefaultFilePath);
-        NumberOfUrls = ArgValidationHelper.ParseInt(NumberOfUrls.ToString(), DefaultNumberOfUrls);
-        NumberOfIps = ArgValidationHelper.ParseInt(NumberOfIps.ToString(), DefaultNumberOfIps);
-        FilterMissingField = ArgValidationHelper.ParseBool(FilterMissingField.ToString(), DefaultFilterMissingField);
-        IncludeTies = ArgValidationHelper.ParseBool(IncludeTies.ToString(), DefaultIncludeTies);
-
-        return this;
     }
 }

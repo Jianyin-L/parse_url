@@ -2,9 +2,9 @@
 
 namespace Parse_URL.Utilities;
 
-public static class ArgParser
+public static class SettingsRetriever
 {
-    public static (string FilePath, int NumberOfUrls, int NumberOfIps, bool FilterMissingField, bool IncludeTies) ParseArguments(string[] args, DefaultSettings defaults)
+    public static (string FilePath, int NumberOfUrls, int NumberOfIps, bool FilterMissingField, bool IncludeTies) RetrieveArguments(string[] args, DefaultSettings defaults)
     {
         // TODO: Possible to simpifly this? The defaults.DefaultXXX is being used twice
         var path = Path.Combine(Directory.GetCurrentDirectory(), defaults.FilePath);
@@ -24,19 +24,19 @@ public static class ArgParser
             switch (key)
             {
                 case "file":
-                    path = ArgValidationHelper.ParseFilePath(value, defaults.FilePath);
+                    path = SettingsProcessor.ParseFilePath(value, defaults.FilePath);
                     break;
                 case "urls":
-                    numberOfUrls = ArgValidationHelper.ParseInt(value, defaults.NumberOfUrls);
+                    numberOfUrls = SettingsProcessor.ParseInt(value, defaults.NumberOfUrls);
                     break;
                 case "ips":
-                    numberOfIps = ArgValidationHelper.ParseInt(value, defaults.NumberOfIps);
+                    numberOfIps = SettingsProcessor.ParseInt(value, defaults.NumberOfIps);
                     break;
                 case "filtermissing":
-                    filterMissingField = ArgValidationHelper.ParseBool(value, defaults.FilterMissingField);
+                    filterMissingField = SettingsProcessor.ParseBool(value, defaults.FilterMissingField);
                     break;
                 case "includeties":
-                    includeTies = ArgValidationHelper.ParseBool(value, defaults.IncludeTies);
+                    includeTies = SettingsProcessor.ParseBool(value, defaults.IncludeTies);
                     break;
                 default:
                     Console.WriteLine($"Unknown argument '{key}' will be ignored.");

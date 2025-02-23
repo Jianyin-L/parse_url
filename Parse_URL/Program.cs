@@ -15,7 +15,7 @@ var configuration = new ConfigurationBuilder()
 var settings = DefaultSettings.LoadFromConfig(configuration);
 
 // Read arguments
-var (filePath, topUrls, topIPs, filterMissing, includeTies) = ArgParser.ParseArguments(args, settings);
+var (filePath, topUrls, topIPs, filterMissing, includeTies) = SettingsRetriever.RetrieveArguments(args, settings);
 
 // Parse log file
 var logEntries = LogParser.ParseLogFile(filePath);
@@ -24,6 +24,7 @@ var topIPsIncludeTies = LogStatistics.GetTopItems(logEntries, log => log.IPAddre
 
 // Output
 Console.WriteLine(
+    "=========================================\n" +
     "Settings:\n" +
     $"  File Path: {filePath}\n" +
     $"  Top N Most Visited URLs: {topUrls}\n" +
