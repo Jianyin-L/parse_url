@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Parse_URL.Tests;
 
-public class AppSettingsTests
+public class DefaultSettingsTests
 {
     private static IConfiguration GetMockConfig(Dictionary<string, string?> settings)
     {
@@ -30,7 +30,7 @@ public class AppSettingsTests
         config.GetSection("Defaults").Bind(defaultSettings);
         defaultSettings.Validate();
 
-        Assert.Equal("./Data/example.log", defaultSettings.FilePath);
+        Assert.Equal("./Data/example.log", defaultSettings.FilePath);   // TODO: Not sure here
         Assert.Equal(9, defaultSettings.NumberOfUrls);
         Assert.Equal(9, defaultSettings.NumberOfIps);
         Assert.True(defaultSettings.FilterMissingField);
@@ -43,10 +43,10 @@ public class AppSettingsTests
         var settings = new Dictionary<string, string?>
         {
             { "Defaults:FilePath", null },
-            { "Defaults:NumberOfUrls", "-1" },
-            { "Defaults:NumberOfIps", "-9" },
-            { "FilterMissingField", "true" },
-            { "XYZ:IncludeTies", "false" }
+            { "Defaults:NumberOfUrls", "   " }, // Failed to convert configuration value at 'Defaults:NumberOfUrls' to type 'System.Int32'.
+            { "Defaults:NumberOfIps", "" },
+            { "FilterMissingField", "t" },
+            { "XYZ:IncludeTies", "0" }
         };
         var config = GetMockConfig(settings);
 
