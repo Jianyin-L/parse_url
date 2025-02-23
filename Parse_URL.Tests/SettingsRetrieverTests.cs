@@ -1,5 +1,4 @@
-﻿using Parse_URL.Configs;
-using Parse_URL.Utilities;
+﻿using Parse_URL.Utilities;
 using Microsoft.Extensions.Configuration;
 
 namespace Parse_URL.Tests;
@@ -28,7 +27,7 @@ public class SettingsRetrieverTests
     public void SettingsRetriever_ShouldReturnDefaultValues_WhenNoArgumentsProvided()
     {
         var config = GetConfig();
-        var settings = DefaultSettings.LoadFromConfig(config);
+        var settings = SettingsRetriever.RetrieveFromConfig(config);
 
         var args = Array.Empty<string>();
         var (filePath, urls, ips, filterMissing, includeTies) = SettingsRetriever.RetrieveArguments(args, settings);
@@ -44,7 +43,7 @@ public class SettingsRetrieverTests
     public void SettingsRetriever_ShouldReturnDefaultValues_WhenInvalidArgumentsProvided()
     {
         var config = GetConfig();
-        var settings = DefaultSettings.LoadFromConfig(config);
+        var settings = SettingsRetriever.RetrieveFromConfig(config);
         var args = new[] {
             "XYZ=abcdefg.log ABC=10 Random=10 YYY=true ZZZ=true",
         };
@@ -64,7 +63,7 @@ public class SettingsRetrieverTests
     public void SettingsRetriever_ShouldReturnDefaultFilePath_WhenInValidFileIsGiven(string file)
     {
         var config = GetConfig();
-        var settings = DefaultSettings.LoadFromConfig(config);
+        var settings = SettingsRetriever.RetrieveFromConfig(config);
         var args = new[] { file };
 
         var (filePath, _, _, _, _) = SettingsRetriever.RetrieveArguments(args, settings);
@@ -81,7 +80,7 @@ public class SettingsRetrieverTests
     public void SettingsRetriever_ShouldParseNumberOfUrls_WhenValidIntegerIsGiven(string input, int expected)
     {
         var config = GetConfig();
-        var settings = DefaultSettings.LoadFromConfig(config);
+        var settings = SettingsRetriever.RetrieveFromConfig(config);
         var args = new string[] { input };
 
         var (_, urls, _, _, _) = SettingsRetriever.RetrieveArguments(args, settings);
@@ -98,7 +97,7 @@ public class SettingsRetrieverTests
     public void SettingsRetriever_ShouldReturnDefaultUrls_WhenInvalidValuesIsGiven(string input)
     {
         var config = GetConfig();
-        var settings = DefaultSettings.LoadFromConfig(config);
+        var settings = SettingsRetriever.RetrieveFromConfig(config);
         var args = new string[] { input };
 
         var (_, urls, _, _, _) = SettingsRetriever.RetrieveArguments(args, settings);
@@ -116,7 +115,7 @@ public class SettingsRetrieverTests
     public void SettingsRetriever_ShouldParseNumberOfIps_WhenValidIntegerIsGiven(string input, int expected)
     {
         var config = GetConfig();
-        var settings = DefaultSettings.LoadFromConfig(config);
+        var settings = SettingsRetriever.RetrieveFromConfig(config);
         var args = new string[] { input };
 
         var (_, _, ips, _, _) = SettingsRetriever.RetrieveArguments(args, settings);
@@ -133,7 +132,7 @@ public class SettingsRetrieverTests
     public void SettingsRetriever_ShouldReturnDefaultIps_WhenInvalidValuesIsGiven(string input)
     {
         var config = GetConfig();
-        var settings = DefaultSettings.LoadFromConfig(config);
+        var settings = SettingsRetriever.RetrieveFromConfig(config);
         var args = new[] { input };
 
         var (_, _, ips, _, _) = SettingsRetriever.RetrieveArguments(args, settings);
@@ -151,7 +150,7 @@ public class SettingsRetrieverTests
     public void SettingsRetriever_ShouldParseBooleanFlags_WhenValidValueIsGiven(string missing, string ties, bool expectedMissing, bool expectedTies)
     {
         var config = GetConfig();
-        var settings = DefaultSettings.LoadFromConfig(config);
+        var settings = SettingsRetriever.RetrieveFromConfig(config);
         var args = new[] { missing, ties };
 
         var (_, _, _, filterMissing, includeTies) = SettingsRetriever.RetrieveArguments(args, settings);
@@ -166,7 +165,7 @@ public class SettingsRetrieverTests
     public void SettingsRetriever_ShouldReturnDefaultBooleanFlags_WhenInvalidValueIsGiven(string missing, string ties, bool expectedMissing, bool expectedTies)
     {
         var config = GetConfig();
-        var settings = DefaultSettings.LoadFromConfig(config);
+        var settings = SettingsRetriever.RetrieveFromConfig(config);
         var args = new[] { missing, ties };
 
         var (_, _, _, filterMissing, includeTies) = SettingsRetriever.RetrieveArguments(args, settings);

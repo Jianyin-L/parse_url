@@ -1,5 +1,5 @@
-﻿using Parse_URL.Configs;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
+using Parse_URL.Utilities;
 
 namespace Parse_URL.Tests;
 
@@ -27,7 +27,7 @@ public class DefaultSettingsTests
         };
         var config = GetConfig(defaults);
         
-        var settings = DefaultSettings.LoadFromConfig(config);
+        var settings = SettingsRetriever.RetrieveFromConfig(config);
 
         Assert.Contains("example.log", settings.FilePath);
         Assert.Equal(9, settings.NumberOfUrls);
@@ -49,7 +49,7 @@ public class DefaultSettingsTests
         };
         var config = GetConfig(defaults);
 
-        var settings = DefaultSettings.LoadFromConfig(config);
+        var settings = SettingsRetriever.RetrieveFromConfig(config);
 
         Assert.Contains("example.log", settings.FilePath);
         Assert.Equal(99, settings.NumberOfUrls);    // TODO: Hardcode the value here may not be good. Use default.NumberOfUrls? 
@@ -67,11 +67,11 @@ public class DefaultSettingsTests
             { "Defaults:Urls", "3" },
             { "XYZ:NumberOfIps", "3" },
             { "Defaults:ABC:FilterMissingField", "true" },
-            { "Defaults", "false" }
+            { "ABCDEF", "false" }
         };
         var config = GetConfig(defaults);
 
-        var settings = DefaultSettings.LoadFromConfig(config);
+        var settings = SettingsRetriever.RetrieveFromConfig(config);
 
         Assert.Contains("example.log", settings.FilePath);
         Assert.Equal(99, settings.NumberOfUrls);

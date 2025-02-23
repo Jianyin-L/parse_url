@@ -1,5 +1,4 @@
-﻿using Parse_URL.Configs;
-using Parse_URL.Services;
+﻿using Parse_URL.Services;
 using Parse_URL.Utilities;
 using Microsoft.Extensions.Configuration;
 
@@ -8,7 +7,7 @@ var configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true) // TODO: maybe optional is true here
     .Build();
-var settings = DefaultSettings.LoadFromConfig(configuration);
+var settings = SettingsRetriever.RetrieveFromConfig(configuration);
 var (filePath, topUrls, topIPs, filterMissing, includeTies) = SettingsRetriever.RetrieveArguments(args, settings);
 
 // Parse log file
