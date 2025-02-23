@@ -3,7 +3,7 @@ using Parse_URL.Utilities;
 
 namespace Parse_URL.Configs;
 
-public class DefaultSettings
+public class DefaultSettings    // TODO: I feel this is still not clean.
 {
     public const string SectionName = "Defaults";
 
@@ -28,23 +28,12 @@ public class DefaultSettings
         IncludeTies = DefaultIncludeTies;
     }
 
-    public static DefaultSettings LoadFromConfig(IConfiguration config)
+    public static DefaultSettings LoadFromConfig(IConfiguration config) => new DefaultSettings
     {
-        var settings = new DefaultSettings();
-
-        //settings.FilePath = config.GetValue<string>($"{SectionName}:{nameof(FilePath)}", DefaultFilePath);
-        //settings.NumberOfUrls = config.GetValue<int>($"{SectionName}:{nameof(NumberOfUrls)}", DefaultNumberOfUrls);
-        //settings.NumberOfIps = config.GetValue<int>($"{SectionName}:{nameof(NumberOfIps)}", DefaultNumberOfIps);
-        //settings.FilterMissingField = config.GetValue<bool>($"{SectionName}:{nameof(FilterMissingField)}", DefaultFilterMissingField);
-        ////IncludeTies = config.GetValue<bool>($"{SectionName}:{nameof(IncludeTies)}", DefaultIncludeTies);
-
-        settings.FilePath = SettingsProcessor.ParseFilePath(config.GetValue<string>($"{SectionName}:{nameof(FilePath)}", DefaultFilePath), DefaultFilePath);
-        settings.NumberOfUrls = SettingsProcessor.ParseInt(config.GetValue<string>($"{SectionName}:{nameof(NumberOfUrls)}", DefaultNumberOfUrls.ToString()), DefaultNumberOfUrls);
-        settings.NumberOfIps = SettingsProcessor.ParseInt(config.GetValue<string>($"{SectionName}:{nameof(NumberOfIps)}", DefaultNumberOfIps.ToString()), DefaultNumberOfIps);
-        settings.FilterMissingField = SettingsProcessor.ParseBool(config.GetValue<string>($"{SectionName}:{nameof(FilterMissingField)}", DefaultFilterMissingField.ToString()), DefaultFilterMissingField);
-        settings.IncludeTies = SettingsProcessor.ParseBool(config.GetValue<string>($"{SectionName}:{nameof(IncludeTies)}", DefaultIncludeTies.ToString()), DefaultIncludeTies);
-
-        return settings;
-
-    }
+        FilePath = SettingsProcessor.ParseFilePath(config.GetValue<string>($"{SectionName}:{nameof(FilePath)}")!) ?? DefaultFilePath,
+        NumberOfUrls = SettingsProcessor.ParseInt(config.GetValue<string>($"{SectionName}:{nameof(NumberOfUrls)}")!) ?? DefaultNumberOfUrls,
+        NumberOfIps = SettingsProcessor.ParseInt(config.GetValue<string>($"{SectionName}:{nameof(NumberOfIps)}")!) ?? DefaultNumberOfIps,
+        FilterMissingField = SettingsProcessor.ParseBool(config.GetValue<string>($"{SectionName}:{nameof(FilterMissingField)}")!) ?? DefaultFilterMissingField,
+        IncludeTies = SettingsProcessor.ParseBool(config.GetValue<string>($"{SectionName}:{nameof(IncludeTies)}")!) ?? DefaultIncludeTies
+    };
 }

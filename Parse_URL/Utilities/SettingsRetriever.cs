@@ -6,12 +6,11 @@ public static class SettingsRetriever
 {
     public static (string FilePath, int NumberOfUrls, int NumberOfIps, bool FilterMissingField, bool IncludeTies) RetrieveArguments(string[] args, DefaultSettings defaults)
     {
-        // TODO: Possible to simpifly this? The defaults.DefaultXXX is being used twice
-        var path = Path.Combine(Directory.GetCurrentDirectory(), defaults.FilePath);
-        var numberOfUrls = defaults.NumberOfUrls;
-        var numberOfIps = defaults.NumberOfIps;
-        var filterMissingField = defaults.FilterMissingField;
-        var includeTies = defaults.IncludeTies;
+        string? path = null;
+        int? numberOfUrls = null;
+        int? numberOfIps = null;
+        bool? filterMissingField = null;
+        bool? includeTies = null;
 
         foreach (var arg in args)
         {
@@ -24,19 +23,19 @@ public static class SettingsRetriever
             switch (key)
             {
                 case "file":
-                    path = SettingsProcessor.ParseFilePath(value, defaults.FilePath);
+                    path = SettingsProcessor.ParseFilePath(value);
                     break;
                 case "urls":
-                    numberOfUrls = SettingsProcessor.ParseInt(value, defaults.NumberOfUrls);
+                    numberOfUrls = SettingsProcessor.ParseInt(value);
                     break;
                 case "ips":
-                    numberOfIps = SettingsProcessor.ParseInt(value, defaults.NumberOfIps);
+                    numberOfIps = SettingsProcessor.ParseInt(value);
                     break;
                 case "filtermissing":
-                    filterMissingField = SettingsProcessor.ParseBool(value, defaults.FilterMissingField);
+                    filterMissingField = SettingsProcessor.ParseBool(value);
                     break;
                 case "includeties":
-                    includeTies = SettingsProcessor.ParseBool(value, defaults.IncludeTies);
+                    includeTies = SettingsProcessor.ParseBool(value);
                     break;
                 default:
                     Console.WriteLine($"Unknown argument '{key}' will be ignored.");
@@ -44,7 +43,11 @@ public static class SettingsRetriever
             }
         }
 
-        return (path, numberOfUrls, numberOfIps, filterMissingField, includeTies);
+        return (path ?? defaults.FilePath, 
+            numberOfUrls ?? defaults.NumberOfUrls, 
+            numberOfIps ?? defaults.NumberOfIps,
+            filterMissingField ?? defaults.FilterMissingField, 
+            includeTies ?? defaults.IncludeTies);
     }
 
 }

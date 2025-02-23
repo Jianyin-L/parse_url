@@ -8,13 +8,7 @@ var configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true) // TODO: maybe optional is true here
     .Build();
-
-// Make the constructor so that it will accept IConfiguration? And inside that constructor, call validate. This way, invalid config will not break the program and it will just load the default? Like what Nick Compass video was shown. 
-//configuration.GetRequiredSection(AppSettings.SectionName).Bind(settings);
-//settings.Validate();
 var settings = DefaultSettings.LoadFromConfig(configuration);
-
-// Read arguments
 var (filePath, topUrls, topIPs, filterMissing, includeTies) = SettingsRetriever.RetrieveArguments(args, settings);
 
 // Parse log file

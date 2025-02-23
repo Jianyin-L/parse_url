@@ -4,27 +4,29 @@ namespace Parse_URL.Utilities;
 
 public static class SettingsProcessor
 {
-    public static string ParseFilePath(string value, string defaultValue)
+    public static string? ParseFilePath(string value)
     {
         if (string.IsNullOrWhiteSpace(value) || !File.Exists(value))
         {
-            Console.WriteLine($"'{value}' is not a valid value or it does not exist. Defaulting to {defaultValue}.");
-            return defaultValue;
+            Console.WriteLine($"'{value}' is not a valid value or it does not exist.");
+            return null;
         }
+
         return value;
     }
 
-    public static int ParseInt(string value, int defaultValue)
+    public static int? ParseInt(string value)
     {
         if (!string.Equals(value, "0") && (double.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out var number)))
         {
             return (int)Math.Round(Math.Abs(number));
         }
-        Console.WriteLine($"'{value}' is not a valid value. Defaulting to {defaultValue}.");
-        return defaultValue;
+
+        Console.WriteLine($"'{value}' is not a valid value.");
+        return null;
     }
 
-    public static bool ParseBool(string value, bool defaultValue)
+    public static bool? ParseBool(string value)
     {
         value = value.Trim().ToLower();
         switch (value)
@@ -44,8 +46,8 @@ public static class SettingsProcessor
                 return false;
 
             default:
-                Console.WriteLine($"'{value}' is not a valid value. Defaulting to {defaultValue}.");
-                return defaultValue;
+                Console.WriteLine($"'{value}' is not a valid value.");
+                return null;
         }
     }
 }

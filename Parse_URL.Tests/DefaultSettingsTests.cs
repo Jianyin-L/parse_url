@@ -41,9 +41,9 @@ public class DefaultSettingsTests
     {
         var defaults = new Dictionary<string, string?>
         {
-            { "Defaults:FilePath", null },
-            { "Defaults:NumberOfUrls", "   " },
-            { "Defaults:NumberOfIps", "" },
+            { "Defaults:FilePath", "abc.log" },
+            { "Defaults:NumberOfUrls", "" },
+            { "Defaults:NumberOfIps", null },
             { "Defaults:FilterMissingField", "abc" },
             { "Defaults:IncludeTies", "9" }
         };
