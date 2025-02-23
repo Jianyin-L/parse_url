@@ -2,20 +2,20 @@
 using Parse_URL.Configs;
 using Microsoft.Extensions.Configuration;
 
-// Config
+// Retrieve config and user inputs
 var configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true) // TODO: maybe optional is true here
     .Build();
-var settings = SettingsRetriever.RetrieveFromConfig(configuration);
-var (filePath, topUrls, topIPs, filterMissing, includeTies) = SettingsRetriever.RetrieveArguments(args, settings);
+var settings = SettingsRetriever.RetrieveConfigs(configuration);
+var (filePath, topUrls, topIPs, filterMissing, includeTies) = SettingsRetriever.RetrieveInputs(args, settings);
 
 // Parse log file
 var logEntries = LogParser.ParseLogFile(filePath);
 var topUrlsExcludeTies = LogStatistics.GetTopItems(logEntries, log => log.Url, topUrls, filterMissing, includeTies);
 var topIPsIncludeTies = LogStatistics.GetTopItems(logEntries, log => log.IPAddress, topIPs, filterMissing, includeTies);
 
-// Output
+// Output results
 Console.WriteLine(
     "=========================================\n" +
     "Settings:\n" +

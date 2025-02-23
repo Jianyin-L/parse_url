@@ -4,7 +4,7 @@ namespace Parse_URL.Configs;
 
 public static class SettingsRetriever
 {
-    public static (string FilePath, int NumberOfUrls, int NumberOfIps, bool FilterMissingField, bool IncludeTies) RetrieveFromConfig(IConfiguration config) => (
+    public static (string FilePath, int NumberOfUrls, int NumberOfIps, bool FilterMissingField, bool IncludeTies) RetrieveConfigs(IConfiguration config) => (
         SettingsProcessor.ParseFilePath(config.GetValue($"{DefaultSettings.SectionName}:{nameof(DefaultSettings.FilePath)}", DefaultSettings.FilePath)) ?? DefaultSettings.FilePath,
         SettingsProcessor.ParseInt(config.GetValue($"{DefaultSettings.SectionName}:{nameof(DefaultSettings.NumberOfUrls)}", DefaultSettings.NumberOfUrls.ToString())) ?? DefaultSettings.NumberOfUrls,
         SettingsProcessor.ParseInt(config.GetValue($"{DefaultSettings.SectionName}:{nameof(DefaultSettings.NumberOfIps)}", DefaultSettings.NumberOfIps.ToString())) ?? DefaultSettings.NumberOfIps,
@@ -12,7 +12,7 @@ public static class SettingsRetriever
         SettingsProcessor.ParseBool(config.GetValue($"{DefaultSettings.SectionName}:{nameof(DefaultSettings.IncludeTies)}", DefaultSettings.IncludeTies.ToString())) ?? DefaultSettings.IncludeTies
     );
 
-    public static (string FilePath, int NumberOfUrls, int NumberOfIps, bool FilterMissingField, bool IncludeTies) RetrieveArguments(string[] args, (string FilePath, int NumberOfUrls, int NumberOfIps, bool FilterMissingField, bool IncludeTies) defaults)
+    public static (string FilePath, int NumberOfUrls, int NumberOfIps, bool FilterMissingField, bool IncludeTies) RetrieveInputs(string[] args, (string FilePath, int NumberOfUrls, int NumberOfIps, bool FilterMissingField, bool IncludeTies) defaults)
     {
         string? path = null;
         int? numberOfUrls = null;

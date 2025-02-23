@@ -5,32 +5,79 @@ namespace Parse_URL.Tests;
 
 public class SettingsRetrieverTests
 {
-    private static IConfiguration GetConfig()
+    [Fact]
+    public void RetrieveConfigs_ShouldReturnConfig_WhenValidConfigIsProvided()
     {
-        var configValues = new Dictionary<string, string?>
+        var defaults = new Dictionary<string, string?>
         {
             { "Defaults:FilePath", "./Data/example.log" },
-            { "Defaults:NumberOfUrls", "3" },
-            { "Defaults:NumberOfIps", "3" },
-            { "Defaults:FilterMissingField", "false" },
+            { "Defaults:NumberOfUrls", "9" },
+            { "Defaults:NumberOfIps", "9" },
+            { "Defaults:FilterMissingField", "true" },
             { "Defaults:IncludeTies", "false" }
         };
+        var config = GetConfig(defaults);
 
-        var configuration = new ConfigurationBuilder()
-            .AddInMemoryCollection(configValues)
-            .Build();
+        var (FilePath, NumberOfUrls, NumberOfIps, FilterMissingField, IncludeTies) = SettingsRetriever.RetrieveConfigs(config);
 
-        return configuration;
+        Assert.Contains("example.log", FilePath);
+        Assert.Equal(9, NumberOfUrls);
+        Assert.Equal(9, NumberOfIps);
+        Assert.True(FilterMissingField);
+        Assert.False(IncludeTies);
     }
 
     [Fact]
-    public void SettingsRetriever_ShouldReturnDefaultValues_WhenNoArgumentsProvided()
+    public void RetrieveConfigs_ShouldFallbackToDefaults_WhenInvalidConfigValueIsProvided()
     {
-        var config = GetConfig();
-        var settings = SettingsRetriever.RetrieveFromConfig(config);
+        var defaults = new Dictionary<string, string?>
+        {
+            { "Defaults:FilePath", "abc.log" },
+            { "Defaults:NumberOfUrls", "" },
+            { "Defaults:NumberOfIps", null },
+            { "Defaults:FilterMissingField", "abc" },
+            { "Defaults:IncludeTies", "9" }
+        };
+        var config = GetConfig(defaults);
 
+        var (FilePath, NumberOfUrls, NumberOfIps, FilterMissingField, IncludeTies) = SettingsRetriever.RetrieveConfigs(config);
+
+        Assert.Contains(DefaultSettings.FilePath, FilePath);
+        Assert.Equal(DefaultSettings.NumberOfUrls, NumberOfUrls);
+        Assert.Equal(DefaultSettings.NumberOfIps, NumberOfIps);
+        Assert.Equal(DefaultSettings.FilterMissingField, FilterMissingField);
+        Assert.Equal(DefaultSettings.IncludeTies, IncludeTies);
+    }
+
+    [Fact]
+    public void RetrieveConfigs_ShouldReturnDefaults_WhenInvalidConfigArgumentIsProvided()
+    {
+        var defaults = new Dictionary<string, string?>
+        {
+            { "FilePath", "./Data/example.log" },
+            { "Defaults:Urls", "3" },
+            { "XYZ:NumberOfIps", "3" },
+            { "Defaults:ABC:FilterMissingField", "true" },
+            { "ABCDEF", "false" }
+        };
+        var config = GetConfig(defaults);
+
+        var (FilePath, NumberOfUrls, NumberOfIps, FilterMissingField, IncludeTies) = SettingsRetriever.RetrieveConfigs(config);
+
+        Assert.Contains(DefaultSettings.FilePath, FilePath);
+        Assert.Equal(DefaultSettings.NumberOfUrls, NumberOfUrls);
+        Assert.Equal(DefaultSettings.NumberOfIps, NumberOfIps);
+        Assert.Equal(DefaultSettings.FilterMissingField, FilterMissingField);
+        Assert.Equal(DefaultSettings.IncludeTies, IncludeTies);
+    }
+
+    [Fact]
+    public void RetrieveInputs_ShouldReturnDefaultValues_WhenNoArgumentsProvided()
+    {
+        var settings = GetDefaultConfigValues();
         var args = Array.Empty<string>();
-        var (filePath, urls, ips, filterMissing, includeTies) = SettingsRetriever.RetrieveArguments(args, settings);
+
+        var (filePath, urls, ips, filterMissing, includeTies) = SettingsRetriever.RetrieveInputs(args, settings);
 
         Assert.Contains("example.log", filePath);
         Assert.Equal(3, urls);
@@ -40,15 +87,14 @@ public class SettingsRetrieverTests
     }
 
     [Fact]
-    public void SettingsRetriever_ShouldReturnDefaultValues_WhenInvalidArgumentsProvided()
+    public void RetrieveInputs_ShouldReturnDefaultValues_WhenInvalidArgumentsProvided()
     {
-        var config = GetConfig();
-        var settings = SettingsRetriever.RetrieveFromConfig(config);
+        var settings = GetDefaultConfigValues();
         var args = new[] {
             "XYZ=abcdefg.log ABC=10 Random=10 YYY=true ZZZ=true",
         };
 
-        var (filePath, urls, ips, filterMissing, includeTies) = SettingsRetriever.RetrieveArguments(args, settings);
+        var (filePath, urls, ips, filterMissing, includeTies) = SettingsRetriever.RetrieveInputs(args, settings);
 
         Assert.Contains("example.log", filePath);
         Assert.Equal(3, urls);
@@ -60,13 +106,12 @@ public class SettingsRetrieverTests
     [Theory]
     [InlineData("file=abcdefg.log")]
     [InlineData("file= ")]
-    public void SettingsRetriever_ShouldReturnDefaultFilePath_WhenInValidFileIsGiven(string file)
+    public void RetrieveInputs_ShouldReturnDefaultFilePath_WhenInValidFileIsGiven(string file)
     {
-        var config = GetConfig();
-        var settings = SettingsRetriever.RetrieveFromConfig(config);
+        var settings = GetDefaultConfigValues();
         var args = new[] { file };
 
-        var (filePath, _, _, _, _) = SettingsRetriever.RetrieveArguments(args, settings);
+        var (filePath, _, _, _, _) = SettingsRetriever.RetrieveInputs(args, settings);
 
         Assert.Contains("example.log", filePath);
     }
@@ -77,13 +122,12 @@ public class SettingsRetrieverTests
     [InlineData("urls=-5", 5)]
     [InlineData("urls=1.2", 1)]
     [InlineData("urls=1.6", 2)]
-    public void SettingsRetriever_ShouldParseNumberOfUrls_WhenValidIntegerIsGiven(string input, int expected)
+    public void RetrieveInputs_ShouldParseNumberOfUrls_WhenValidIntegerIsGiven(string input, int expected)
     {
-        var config = GetConfig();
-        var settings = SettingsRetriever.RetrieveFromConfig(config);
+        var settings = GetDefaultConfigValues();
         var args = new string[] { input };
 
-        var (_, urls, _, _, _) = SettingsRetriever.RetrieveArguments(args, settings);
+        var (_, urls, _, _, _) = SettingsRetriever.RetrieveInputs(args, settings);
 
         Assert.Equal(expected, urls);
     }
@@ -94,13 +138,12 @@ public class SettingsRetrieverTests
     [InlineData("urls= ")]
     [InlineData("urls==")]
     [InlineData("urls=...")]
-    public void SettingsRetriever_ShouldReturnDefaultUrls_WhenInvalidValuesIsGiven(string input)
+    public void RetrieveInputs_ShouldReturnDefaultUrls_WhenInvalidValuesIsGiven(string input)
     {
-        var config = GetConfig();
-        var settings = SettingsRetriever.RetrieveFromConfig(config);
+        var settings = GetDefaultConfigValues();
         var args = new string[] { input };
 
-        var (_, urls, _, _, _) = SettingsRetriever.RetrieveArguments(args, settings);
+        var (_, urls, _, _, _) = SettingsRetriever.RetrieveInputs(args, settings);
 
         Assert.Equal(3, urls);
     }
@@ -112,13 +155,12 @@ public class SettingsRetrieverTests
     [InlineData("ips=1.2", 1)]
     [InlineData("ips=1.6", 2)]
     [InlineData("ips=10 ", 10)]
-    public void SettingsRetriever_ShouldParseNumberOfIps_WhenValidIntegerIsGiven(string input, int expected)
+    public void RetrieveInputs_ShouldParseNumberOfIps_WhenValidIntegerIsGiven(string input, int expected)
     {
-        var config = GetConfig();
-        var settings = SettingsRetriever.RetrieveFromConfig(config);
+        var settings = GetDefaultConfigValues();
         var args = new string[] { input };
 
-        var (_, _, ips, _, _) = SettingsRetriever.RetrieveArguments(args, settings);
+        var (_, _, ips, _, _) = SettingsRetriever.RetrieveInputs(args, settings);
 
         Assert.Equal(expected, ips);
     }
@@ -129,13 +171,12 @@ public class SettingsRetrieverTests
     [InlineData("urls= ")]
     [InlineData("urls==")]
     [InlineData("urls=...")]
-    public void SettingsRetriever_ShouldReturnDefaultIps_WhenInvalidValuesIsGiven(string input)
+    public void RetrieveInputs_ShouldReturnDefaultIps_WhenInvalidValuesIsGiven(string input)
     {
-        var config = GetConfig();
-        var settings = SettingsRetriever.RetrieveFromConfig(config);
+        var settings = GetDefaultConfigValues();
         var args = new[] { input };
 
-        var (_, _, ips, _, _) = SettingsRetriever.RetrieveArguments(args, settings);
+        var (_, _, ips, _, _) = SettingsRetriever.RetrieveInputs(args, settings);
 
         Assert.Equal(3, ips);
     }
@@ -147,13 +188,12 @@ public class SettingsRetrieverTests
     [InlineData("filtermissing=0", "includeties=1", false, true)]
     [InlineData("filtermissing=no", "includeties=yes", false, true)]
     [InlineData("filtermissing=N", "includeties=y", false, true)]
-    public void SettingsRetriever_ShouldParseBooleanFlags_WhenValidValueIsGiven(string missing, string ties, bool expectedMissing, bool expectedTies)
+    public void RetrieveInputs_ShouldParseBooleanFlags_WhenValidValueIsGiven(string missing, string ties, bool expectedMissing, bool expectedTies)
     {
-        var config = GetConfig();
-        var settings = SettingsRetriever.RetrieveFromConfig(config);
+        var settings = GetDefaultConfigValues();
         var args = new[] { missing, ties };
 
-        var (_, _, _, filterMissing, includeTies) = SettingsRetriever.RetrieveArguments(args, settings);
+        var (_, _, _, filterMissing, includeTies) = SettingsRetriever.RetrieveInputs(args, settings);
 
         Assert.Equal(expectedMissing, filterMissing);
         Assert.Equal(expectedTies, includeTies);
@@ -162,15 +202,26 @@ public class SettingsRetrieverTests
     [Theory]
     [InlineData("filtermissing=abc", "includeties=123", false, false)]
     [InlineData("filtermissing=  ", "includeties=!!", false, false)]
-    public void SettingsRetriever_ShouldReturnDefaultBooleanFlags_WhenInvalidValueIsGiven(string missing, string ties, bool expectedMissing, bool expectedTies)
+    public void RetrieveInputs_ShouldReturnDefaultBooleanFlags_WhenInvalidValueIsGiven(string missing, string ties, bool expectedMissing, bool expectedTies)
     {
-        var config = GetConfig();
-        var settings = SettingsRetriever.RetrieveFromConfig(config);
+        var settings = GetDefaultConfigValues();
         var args = new[] { missing, ties };
 
-        var (_, _, _, filterMissing, includeTies) = SettingsRetriever.RetrieveArguments(args, settings);
+        var (_, _, _, filterMissing, includeTies) = SettingsRetriever.RetrieveInputs(args, settings);
 
         Assert.Equal(expectedMissing, filterMissing);
         Assert.Equal(expectedTies, includeTies);
     }
+
+    private static IConfiguration GetConfig(Dictionary<string, string?> settings)
+    {
+        var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(settings)
+            .Build();
+
+        return configuration;
+    }
+
+    private static (string FilePath, int NumberOfUrls, int NumberOfIps, bool FilterMissingField, bool IncludeTies) GetDefaultConfigValues() => ("./Data/example.log", 3, 3, false, false);
+
 }
