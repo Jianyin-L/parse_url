@@ -38,7 +38,7 @@ public class LogStatisticsTests
     }
 
     [Fact]
-    public void CountUniqueItems_ShouldExcludeMissingIPsAndReturnUniqueIPCount()
+    public void CountUniqueItems_ShouldExcludeMissingIPsAndReturnUniqueIPCount_WhenFilterMissingIsTrue()
     {
         var logEntries = new List<LogEntry>
         {
@@ -131,7 +131,7 @@ public class LogStatisticsTests
     }
 
     [Fact]
-    public void GetTopItems_ShouldReturnEmptyResul_WhenfRequiredFieldMissing()
+    public void GetTopItems_ShouldReturnEmptyResul_WhenFilterMissingIsTrue()
     {
         var logEntries = new List<LogEntry>{
             new() { User = "ABC123"},
@@ -168,7 +168,7 @@ public class LogStatisticsTests
     }
 
     [Fact]
-    public void GetTopItems_ShouldReturnTopActiveUsersIncludingTiesExcludingMissingUsers()
+    public void GetTopItems_ShouldReturnTopActiveUsers_WhenIncludingTiesExcludingMissingUsers()
     {
         var logEntries = new List<LogEntry>
         {

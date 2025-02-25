@@ -21,9 +21,10 @@ Console.WriteLine(
     );
 Console.BackgroundColor = ConsoleColor.Black;
 
-// Parse log file
+// Parse log file and calculate the results
 Console.BackgroundColor = ConsoleColor.DarkBlue;
 var logEntries = LogParser.ParseLogFile(filePath);
+var uniqueIPs = LogStatistics.CountUniqueItems(logEntries, log => log.IPAddress, filterMissing);
 var topUrlsExcludeTies = LogStatistics.GetTopItems(logEntries, log => log.Url, topUrls, filterMissing, includeTies);
 var topIPsIncludeTies = LogStatistics.GetTopItems(logEntries, log => log.IPAddress, topIPs, filterMissing, includeTies);
 Console.BackgroundColor = ConsoleColor.Black;
@@ -35,7 +36,7 @@ Console.WriteLine("=========================================");
 Console.WriteLine($"Total Number of Entries:{logEntries.Count}");
 
 Console.WriteLine("\n=========================================");
-Console.WriteLine($"Number of Unique IP Addresses:{LogStatistics.CountUniqueItems(logEntries, log => log.IPAddress)}");
+Console.WriteLine($"Number of Unique IP Addresses:{uniqueIPs}");
 
 Console.WriteLine("\n=========================================");
 Console.WriteLine($"Top {topUrls} Most Visited URLs:");
