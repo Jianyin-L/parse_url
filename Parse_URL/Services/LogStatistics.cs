@@ -76,6 +76,7 @@ public static class LogStatistics
             string str => string.IsNullOrWhiteSpace(str),
             DateTimeOffset dto => dto == DateTimeOffset.MinValue,
             int num => num == 0,
+            Models.HttpMethod method => method == Models.HttpMethod.MISSING,
             _ => false
         };
     }

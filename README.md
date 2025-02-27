@@ -52,13 +52,13 @@ The project structure is as follows:
 └── Parse_URL.sln
 ```
 
-- `Parse_URL` folder: contains the application code.
-    - `Configs`: contains logics to load configurations and read user arguments.
+- `Parse_URL` folder: the main application code.
+    - `Configs`: logics around loading configurations and reading user arguments.
 	- `Data`: contains a sample log file `example.log`.
-	- `Models`: contains the data models used in the application.
-	- `Services`: contains logics to parse log entries and calculate statistics.
+	- `Models`: the data models used in the application.
+	- `Services`: logics to parse log entries and calculate statistics.
 	- `Program.cs`: the entry point of the application.
-- `Parse_URL.Tests` folder: contains unit tests for the application.
+- `Parse_URL.Tests` folder: tests for the application.
 - `Parse_URL.sln`: the solution file for the project.
 
 ## Assumptions :children_crossing:
@@ -78,11 +78,11 @@ The project structure is as follows:
     ```bash
     git clone https://github.com/Jianyin-L/parse_url.git
     ```
-2. Navigate to the project directory `parse_url`.
+2. Navigate to the project directory `Parse_URL`.
 	```bash
     cd Parse_URL/Parse_URL
     ```
-    From there, you should see a folder named `./Data` which contains the sample log file `example.log`.
+    From there, you should see a folder named `./Data` which contains a sample log file `example.log`.
 
 3. Build and run the project by running the following commands:
     ```bash
@@ -91,7 +91,7 @@ The project structure is as follows:
     ```
     The results will be displayed in the console.  
 
-4. To run the tests, navigate to the `Parse_URL.Tests` folder from the root folder and run:
+4. To run the tests, from the root folder `Parse_URL`, navigate to the `Parse_URL.Tests` folder and run:
     ```bash
     cd ./Parse_URL.Tests
     dotnet test
@@ -137,7 +137,7 @@ By setting `filterMissing=true`, if the user is requesting the most active URLs 
 ### Mix and Match
 You are more than welcome to combine these options when running the application. For example:
 ```bash
-dotnet run file=test1.log urls=5 filtermissing=true
+dotnet run file=test1.log urls=5 filterMissing=true
 ```
 
 ## Expected Output :chart_with_upwards_trend:

@@ -1,5 +1,5 @@
-﻿using Parse_URL.Services;
-using Parse_URL.Configs;
+﻿using Parse_URL.Configs;
+using Parse_URL.Services;
 using Microsoft.Extensions.Configuration;
 
 // Retrieve config and user inputs
